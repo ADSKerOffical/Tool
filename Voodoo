@@ -1,0 +1,284 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Voodoo doll"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Size = Vector3.new(1, 1, 1)
+
+doll = Instance.new("SpecialMesh", handle)
+doll.MeshId = "rbxassetid://63216455"
+doll.TextureId = "rbxassetid://63216473"
+doll.Scale = Vector3.new(2, 2, 2)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.Enabled = false
+local ScreenGuis = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGuis.Enabled = false
+local ScreenGui1 = Instance.new("ScreenGui", ScreenGui.Parent)
+ScreenGui1.Enabled = false
+local mode = true
+
+local TButton = Instance.new("TextBox")
+TButton.Name = "Button"
+TButton.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+TButton.Position = UDim2.new(0.86, 0, 0.4, 0)
+TButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TButton.TextScaled = true
+TButton.Text = ""
+TButton.ClearTextOnFocus = false
+TButton.PlaceholderText = "Player Name"
+TButton.Parent = ScreenGui
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Crush Head"
+Button.Parent = ScreenGui
+
+local sacrifice = nil
+Button.MouseButton1Click:Connect(function()
+inputPlayerName = TButton.Text
+    for _, player in pairs(game.Players:GetPlayers()) do
+                if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
+           TButton.Text = player.Name
+sound = Instance.new("Sound", game.Players[player.Name].Character.Head)
+sound.SoundId = "rbxassetid://9114788214"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+        sacrifice = game.Players:FindFirstChild(player.Name)
+        sacrifice.Character.Head.Transparency = 1
+        sacrifice.Character.Humanoid:ChangeState("Dead")
+        sacrifice.Character.Humanoid.BreakJointsOnDeath = false
+               end
+    end
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.82, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Set on fire"
+Button.Parent = ScreenGui
+
+local sacrifice = nil
+Button.MouseButton1Click:Connect(function()
+inputPlayerName = TButton.Text
+    for _, player in pairs(game.Players:GetPlayers()) do
+                if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
+           TButton.Text = player.Name
+        sacrifice = game.Players:FindFirstChild(player.Name)
+        humanoid = sacrifice.Character.Humanoid
+      fire = Instance.new("Fire", humanoid.RootPart)
+      fire.Size = 20
+      fire.Heat = 50
+    gf = true
+ coroutine.wrap(function()
+repeat wait()
+humanoid:TakeDamage(humanoid.MaxHealth / 150)
+until gf == false or humanoid.Health <= 0
+ end)()
+ task.wait(7)
+ gf = false
+ fire.Enabled = false
+               end
+    end
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.88, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Bring"
+Button.Parent = ScreenGui
+
+local sacrifice = nil
+Button.MouseButton1Click:Connect(function()
+inputPlayerName = TButton.Text
+    for _, player in pairs(game.Players:GetPlayers()) do
+                if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
+           TButton.Text = player.Name
+        sacrifice = game.Players:FindFirstChild(player.Name)
+    partTweenn2 = game:GetService("TweenService"):Create(sacrifice.Character.HumanoidRootPart, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        CFrame = handle.CFrame
+    })
+    partTweenn2:Play()
+               end
+    end
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.675, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Weakness"
+Button.Parent = ScreenGui
+
+local sacrifice = nil
+Button.MouseButton1Click:Connect(function()
+inputPlayerName = TButton.Text
+    for _, player in pairs(game.Players:GetPlayers()) do
+                if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
+           TButton.Text = player.Name
+        sacrifice = game.Players:FindFirstChild(player.Name)
+        sacrifice.Character.Humanoid:ChangeState("FallingDown")
+               end
+    end
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.82, 0, 0.675, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Soul Sucker"
+Button.Parent = ScreenGui
+
+local sacrifice = nil
+Button.MouseButton1Click:Connect(function()
+inputPlayerName = TButton.Text
+    for _, player in pairs(game.Players:GetPlayers()) do
+                if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
+           TButton.Text = player.Name
+        sacrifice = game.Players:FindFirstChild(player.Name)
+local partTweenn2 = game:GetService("TweenService"):Create(sacrifice.Character.Humanoid, TweenInfo.new(2, Enum.EasingStyle.Linear), {
+        MaxHealth = 0,
+        Health = 0
+    })
+    partTweenn2:Play()
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(2, Enum.EasingStyle.Linear), {
+        MaxHealth = game.Players.LocalPlayer.Character.Humanoid.MaxHealth + sacrifice.Character.Humanoid.MaxHealth,
+        Health = game.Players.LocalPlayer.Character.Humanoid.Health + sacrifice.Character.Humanoid.Health
+    })
+    partTweenn2:Play()
+               end
+    end
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.88, 0, 0.675, 0)
+Button.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "The Cursed Puddle"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+pud = Instance.new("Part", workspace)
+pud.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+pud.Material = "SmoothPlastic"
+pud.Color = Color3.new(0, 0, 0)
+pud.CanCollide = false
+pud.Size = Vector3.new(10, 0.2, 10)
+pud.Anchored = true
+
+sound = Instance.new("Sound", pud)
+sound.SoundId = "rbxassetid://1228230799"
+sound.Volume = 1.6
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+
+local time = 8
+local startTime = tick()
+
+coroutine.wrap(function()
+    repeat
+        task.wait()
+        local targetCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -2.7, 0)
+        pud.CFrame = pud.CFrame:lerp(targetCFrame, 0.1)
+    until pud.Parent == nil or game.Players.LocalPlayer.Character.Humanoid.Health <= 0
+end)()
+
+pud.Touched:Connect(function(hit)
+    humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character and humanoid.Health > 0 then
+        humanoid.MaxHealth -= humanoid.MaxHealth / 20
+        humanoid.Health -= humanoid.Health / 15
+        humanoid:TakeDamage(humanoid.MaxHealth / 2)
+        if humanoid.Health <= 0 or humanoid.MaxHealth <= 0 then
+            partTweenn1 = game:GetService("TweenService"):Create(pud, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+                Size = pud.Size + Vector3.new(1, 0, 1)
+            })
+            partTweenn1:Play()
+            time = time + 1
+               if pud.Size == Vector3.new(30, 0.2, 30) then
+            pud:Destroy()
+            ball = Instance.new("Part", workspace)
+            ball.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            ball.Shape = "Ball"
+            ball.Material = "Neon"
+            ball.Color = Color3.new(0, 0, 0)
+            ball.Size = Vector3.zero
+            ball.Anchored = true
+            ball.CanCollide = false
+            
+            partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(100, 100, 100)
+    })
+    partTweenn2:Play()
+    
+    sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://165969964"
+sound.Volume = 5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+               end
+        end
+    end
+end)
+
+coroutine.wrap(function()
+    while pud.Parent ~= nil and game.Players.LocalPlayer.Character.Humanoid.Health > 0 do
+        task.wait()
+        if tick() - startTime >= time then
+            pud:Destroy()
+            break
+        end
+    end
+end)()
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.75, 0)
+Button.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Dash"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+ game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 200 + Vector3.new(0, 100, 0)
+end)
+
+tool.Equipped:Connect(function()
+ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+ScreenGui.Enabled = false
+end)
