@@ -1,0 +1,50 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Gravity Controller"
+tool.Grip = CFrame.Angles(0, math.rad(90), 0)
+local count = 0
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+cont = Instance.new("SpecialMesh", handle)
+cont.Scale = Vector3.new(2, 2, 2)
+cont.MeshId = "rbxassetid://74319669"
+cont.TextureId = "rbxassetid://74319673"
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+count += 1
+ball = Instance.new("Part", workspace)
+ball.Size = Vector3.new(20, 20, 20)
+ball.Position = handle.Position
+ball.Color = Color3.new(1, 0, 0.4)
+ball.Material = "ForceField"
+ball.Anchored = true
+ball.CanCollide = false
+ball.Shape = "Ball"
+partTweenn1 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {
+        Size = Vector3.zero
+    })
+    partTweenn1:Play()
+ 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://550965268"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+game.Debris:AddItem(ball, 6)
+ if count == 1 then
+Workspace.Gravity = 25
+ elseif count == 2 then
+Workspace.Gravity = 700
+ elseif count == 3 then
+ Workspace.Gravity = 196.2
+ count = 0
+  end
+ end
+end)
