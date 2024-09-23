@@ -1,0 +1,90 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Shotgun"
+tool.Grip = CFrame.Angles(math.rad(-90), math.rad(360), math.rad(0))
+tool.GripPos = Vector3.new(0, 0, 1.65)
+local ammo = 0
+local maxammo = 5
+local canshot = true
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Color = Color3.new(0, 0, 0)
+
+heal = Instance.new("SpecialMesh", handle)
+heal.Scale = Vector3.new(1.3, 1.3, 1.3)
+heal.MeshId = "rbxassetid://10113628989"
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+local currentTime = tick()
+            if currentTime - lastPressTime >= 1 and canshot == true then
+                lastPressTime = currentTime 
+ammo += 1
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://642890855"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+tool.GripPos = Vector3.new(0, 0, 1)
+partTweenn2 = game:GetService("TweenService"):Create(tool, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {
+        GripPos = Vector3.new(0, 0, 1.65)
+    })
+    partTweenn2:Play()
+ shoot = Instance.new("Part", workspace)
+    shoot.Shape = "Ball"
+    shoot.Color = Color3.new(0, 0, 0)
+    shoot.Size = Vector3.new(1.5, 1.5, 1.5)
+    shoot.CanCollide = false
+    shoot.Position = handle.Position
+    game.Debris:AddItem(shoot, 15)
+
+    Mouse = game.Players.LocalPlayer:GetMouse()
+    mousehit = Mouse.Hit.Position
+
+    local recoilDirection = (shoot.Position - mousehit).Unit
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity += recoilDirection * 150
+
+    bodyVelocity = Instance.new("BodyVelocity", shoot)
+    bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    bodyVelocity.Velocity = (mousehit - shoot.Position).Unit * 550
+    shoot.CFrame = CFrame.new(shoot.Position, mousehit)
+
+    shoot.Touched:Connect(function(hitPart)
+humanoid = hitPart.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+   shoot:Destroy()
+   humanoid:TakeDamage(100)
+   humanoid.RootPart.Velocity = shoot.CFrame.LookVector * 150
+   humanoid:ChangeState("FallingDown")
+        end
+    end)
+ if ammo >= 5 then
+canshot = false
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2424840044"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+wait(sound.TimeLength)
+canshot = true
+ammo = 0
+ end
+            end
+end)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243761991"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+        animation:Stop()
+end
+end)
