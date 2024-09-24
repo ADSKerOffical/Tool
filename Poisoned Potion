@@ -1,0 +1,36 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Poisoned Potion"
+tool.ToolTip = "I wouldn't recommend drinking this"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+pot = Instance.new("SpecialMesh", handle)
+pot.Scale = Vector3.new(1.2, 1.2, 1.2)
+pot.TextureId = "rbxassetid://72639133"
+pot.MeshId = "rbxassetid://72639103"
+
+tool.Activated:Connect(function()
+tool.ManualActivationOnly = true
+ sound = Instance.new("Sound", game.Players.LocalPlayer.Character.PrimaryPart)
+sound.SoundId = "rbxassetid://2245190929"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ wait(2)
+tool:Destroy()
+local gh = 0
+game.Players.LocalPlayer.Character.Humanoid:ChangeState("FallingDown")
+ repeat wait(1)
+gh += 1
+game.Players.LocalPlayer.Character.Humanoid:TakeDamage(5)
+sound = Instance.new("Sound", game.Players.LocalPlayer.Character.PrimaryPart)
+sound.SoundId = "rbxassetid://5656490592"
+sound.Volume = 1
+sound.PlaybackSpeed = 1.1
+sound.Looped = false
+sound:Play()
+ until gh >= 7
+end)
