@@ -1,0 +1,26 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Life Source"
+tool.ToolTip = "Increases your maximum health by 10"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+heal = Instance.new("SpecialMesh", handle)
+heal.Scale = Vector3.new(2, 2, 2)
+heal.TextureId = "rbxassetid://75318581"
+heal.MeshId = "rbxassetid://75318500"
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+game.Players.LocalPlayer.Character.Humanoid.MaxHealth += 10
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxasset://sounds/electronicpingshort.wav"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+            end
+end)
