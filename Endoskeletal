@@ -1,0 +1,103 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Endoskeletal"
+tool.ToolTip = "Freeze your opponents with this tool"
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(0), 0)
+tool.GripPos = Vector3.new(0, -1.6, -0.5)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+heal = Instance.new("SpecialMesh", handle)
+heal.Scale = Vector3.new(1.2, 1.2, 1.2)
+heal.TextureId = "rbxassetid://34795732"
+heal.MeshId = "rbxassetid://34795818"
+
+local ammo = 0
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.6 and ammo <= 4 then
+                lastPressTime = currentTime
+ ammo += 1
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://3029174077"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0.5, 0, 0.8)
+ball.Shape = "Ball"
+ball.Material = "SmoothPlastic"
+ball.Size = Vector3.new(1.5, 1.5, 1.5)
+ball.CanCollide = false
+ball.Position = handle.Position
+game.Debris:AddItem(ball, 8)
+
+sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://5509750509"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 350
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+humanoid:TakeDamage(30)
+humanoid.RootPart.Velocity = Vector3.new(0, 100, 0)
+ball:Destroy()
+ 
+ partTweenn1 = game:GetService("TweenService"):Create(humanoid.RootPart, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        CFrame = humanoid.RootPart.CFrame
+    })
+    partTweenn1:Play()
+ if humanoid.Health <= 0 then
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - humanoid.RootPart.Position).magnitude
+        if distance <= 12 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(35)
+ humanoid.RootPart.Velocity = Vector3.new(0, 150, 0)
+ humanoid:ChangeState("FallingDown")
+end
+ end
+   end
+  end)
+     if ammo >= 4 then
+tool.Grip = CFrame.Angles(math.rad(0), 0, 0)
+tool.GripPos = Vector3.new(0, 0, 0)
+ sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2346155695"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+task.wait(0.5)
+  partTweenn1 = game:GetService("TweenService"):Create(tool, TweenInfo.new(0.4, Enum.EasingStyle.Linear), {
+        Grip = CFrame.Angles(math.rad(90), 0, 0),
+        GripPos = Vector3.new(0, -1.6, -0.5)
+    })
+    partTweenn1:Play()
+    task.wait(1)
+    ammo = 0
+     end
+ end
+end)
