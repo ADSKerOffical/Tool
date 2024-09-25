@@ -1,0 +1,115 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Time paradox"
+tool.ToolTip = "Something powerful"
+tool.GripPos = Vector3.new(0, 0.5, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+clock = Instance.new("SpecialMesh", handle)
+clock.Scale = Vector3.new(3, 3, 3)
+clock.TextureId = "rbxassetid://101060383"
+clock.MeshId = "rbxassetid://101060412"
+
+emitter = Instance.new("ParticleEmitter", game.Players.LocalPlayer.Character.Torso)
+emitter.Rate = 10
+emitter.Lifetime = NumberRange.new(1, 1) 
+emitter.Enabled = false
+
+emitter.Texture = "rbxassetid://13240623019" 
+numberKeypoints = {
+ NumberSequenceKeypoint.new(0, 1), 
+ NumberSequenceKeypoint.new(0.1, 0), 
+ NumberSequenceKeypoint.new(0.5, 0.25), 
+ NumberSequenceKeypoint.new(1, 1), 
+}
+emitter.Transparency = NumberSequence.new(numberKeypoints)
+emitter.LightEmission = 1 
+emitter.LightInfluence = 0 
+
+emitter.EmissionDirection = Enum.NormalId.Front 
+emitter.Speed = NumberRange.new(0, 0) 
+emitter.Drag = 0 
+emitter.VelocitySpread = NumberRange.new(0, 0)
+emitter.VelocityInheritance = 0 
+emitter.Acceleration = Vector3.new(0, 0, 0)
+emitter.LockedToPart = true 
+emitter.SpreadAngle = Vector2.new(0, 0) 
+
+numberKeypoints2 = {
+ NumberSequenceKeypoint.new(0, 0), 
+ NumberSequenceKeypoint.new(1, 10), 
+}
+emitter.Size = NumberSequence.new(numberKeypoints2)
+emitter.ZOffset = -1 
+emitter.Rotation = NumberRange.new(0, 360) 
+emitter.RotSpeed = NumberRange.new(0)
+
+local isEquipped = false
+
+tool.Equipped:Connect(function()
+  emitter.Enabled = true
+  isEquipped = true
+  
+  while isEquipped do
+    task.wait()
+    local foundHumanoids = {}
+    Usuario = game.Players.LocalPlayer
+    for _, v in pairs(workspace:GetDescendants()) do
+      if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - Usuario.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 15 then
+          table.insert(foundHumanoids, v)
+        end
+      end
+    end
+
+    for _, humanoid in pairs(foundHumanoids) do
+      humanoid.RootPart.AssemblyLinearVelocity = Vector3.zero
+      humanoid:TakeDamage(1)
+    end
+  end
+end)
+
+tool.Unequipped:Connect(function()
+  emitter.Enabled = false
+  isEquipped = false
+end)
+
+tool.Activated:Connect(function()
+ball = Instance.new("Part", workspace)
+ball.Position = handle.Position
+ball.Color = Color3.new(1, 1, 1)
+ball.Material = "Neon"
+ball.Size = Vector3.zero
+ball.Shape = "Ball"
+ball.CanCollide = false
+ball.Anchored = true
+ball.Transparency = 0.5
+game.Debris:AddItem(ball, 12)
+
+partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Size = Vector3.new(100, 100, 100)
+    })
+    partTweenn2:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - ball.Position).magnitude
+        if distance <= 50 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ coroutine.wrap(function()
+ humanoid.RootPart.Anchored = true
+ humanoid:TakeDamage(humanoid.MaxHealth / 5)
+ task.wait(12)
+ humanoid.RootPart.Anchored = false
+ end)()
+end
+end)
