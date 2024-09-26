@@ -1,0 +1,80 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Healing Bomb"
+tool.ToolTip = "Spawns a field that heals not only allies but also enemies"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+heal = Instance.new("SpecialMesh", handle)
+heal.Scale = Vector3.new(1.2, 1.2, 1.2)
+heal.TextureId = "rbxassetid://91443246"
+heal.MeshId = "rbxassetid://91443046"
+
+tool.Activated:Connect(function()
+tool:Destroy()
+ bomb = Instance.new("Part", workspace)
+ bomb.Size = Vector3.new(1, 1, 1)
+ bomb.CFrame = handle.CFrame * CFrame.new(0, 0, -2)
+ 
+ sound = Instance.new("Sound", bomb)
+sound.SoundId = "rbxassetid://8737379396"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(bomb, 50)
+
+mesh = Instance.new("SpecialMesh", bomb)
+mesh.Scale = Vector3.new(1.2, 1.2, 1.2)
+mesh.TextureId = "rbxassetid://91443246"
+mesh.MeshId = "rbxassetid://91443046"
+ task.wait(2.5)
+  force = Instance.new("Part", bomb)
+  force.CanCollide = false
+  force.Material = "ForceField"
+  force.Shape = "Ball"
+  force.Position = bomb.Position
+  force.Color = Color3.new(0, 1, 0)
+  force.Size = Vector3.zero
+  force.Anchored = true
+  
+  sound = Instance.new("Sound", force)
+sound.SoundId = "rbxassetid://9120503525"
+sound.Volume = 2
+sound.TimePosition = 0.8
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  
+  loop = Instance.new("Sound", force)
+ loop.SoundId = "rbxassetid://9125566550"
+loop.Volume = 2.5
+loop.PlaybackSpeed = 1
+loop.Looped = true
+loop:Play()
+  
+  partTweenn2 = game:GetService("TweenService"):Create(force, TweenInfo.new(0.7, Enum.EasingStyle.Quad), {
+        Size = Vector3.new(50, 50, 50)
+    })
+    partTweenn2:Play()
+  
+  spawn(function()
+repeat task.wait()
+ force.Position = bomb.Position
+ local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") then
+        local distance = (v.RootPart.Position - force.Position).magnitude
+        if distance <= 30 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid.Health += 1
+end
+until bomb.Parent == nil or force.Parent == nil
+  end)
+end)
