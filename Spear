@@ -1,0 +1,70 @@
+tool = game:GetObjects("rbxassetid://5980936373")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.Name = "Spear"
+tool.Grip = CFrame.Angles(0, math.rad(180), math.rad(-90))
+tool.GripPos = Vector3.new(1.5, 0, 0)
+tool.ToolTip = ""
+
+local handle = tool:FindFirstChild("Handle")
+local tip = tool:FindFirstChild("PrimaryPart")
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243761991"
+Anim.Name = "Hold"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "Hold" then
+        animation:Stop()
+    end
+end
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243764134"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "http://www.roblox.com/asset/?id=101164100"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 6 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(20)
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://220834019"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ local recoilDirection = (handle.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -100
+end
+            end
+end)
