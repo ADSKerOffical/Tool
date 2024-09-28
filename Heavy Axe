@@ -1,0 +1,75 @@
+tool = game:GetObjects("rbxassetid://14192799679")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.Name = "Heavy Axe"
+tool.GripPos = Vector3.new(0, 1, 0)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://176223120"
+Anim.Name = "Hold"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        WalkSpeed = 11
+    })
+    partTweenn2:Play()
+end)
+
+tool.Unequipped:Connect(function()
+local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "Hold" then
+        animation:Stop()
+    end
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(1.5, Enum.EasingStyle.Linear), {
+        WalkSpeed = 20
+    })
+    partTweenn2:Play()
+end)
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://89289879"
+local swing = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", tool:FindFirstChild("Handle"))
+swing:Play()
+task.wait(.6)
+sound.SoundId = "rbxassetid://2156366946"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - tool:FindFirstChild("Handle").Position).magnitude
+        if distance <= 6 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(65)
+ humanoid:ChangeState("FallingDown")
+local recoilDirection = (tool:FindFirstChild("Handle").Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 100
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://8348700441"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+            end
+end)
