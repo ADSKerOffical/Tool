@@ -1,0 +1,42 @@
+tool = game:GetObjects("rbxassetid://3709627518")[1]
+tool.Name = "Metal Pipe"
+tool.ToolTip = "I don't know why you need this, but it would probably be a melee weapon"
+tool.Grip = CFrame.Angles(math.rad(-10), math.rad(0), math.rad(90))
+tool.GripPos = Vector3.new(1, 0, 0)
+tool.Parent = game.Players.LocalPlayer.Backpack
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.7 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://209875013"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+ task.wait(.1)
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - tool:FindFirstChild("Handle").Position).magnitude
+        if distance <= 7.5 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(15)
+ local recoilDirection = (tool:FindFirstChild("Handle").Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 125
+sound = Instance.new("Sound", tool:FindFirstChild("Handle"))
+sound.SoundId = "rbxassetid://3521543186"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+            end
+end)
