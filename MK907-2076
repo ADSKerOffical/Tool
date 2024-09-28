@@ -1,0 +1,117 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "MK907-2076"
+tool.ToolTip = "MK907-2076: Weapon of the future, release a large burst of Energy from this powerful weapon"
+tool.GripPos = Vector3.new(0, -0.6, 1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+rl = Instance.new("SpecialMesh", handle)
+rl.Scale = Vector3.new(0.8, 0.8, 0.8)
+rl.TextureId = "rbxassetid://466401373"
+rl.MeshId = "rbxassetid://466401551"
+
+core = Instance.new("Part", handle)
+core.CFrame = handle.CFrame * CFrame.new(0, 0.4, -2.5)
+core.Size = Vector3.new(0.5, 0.5, 0.5)
+core.Color = Color3.new(0.5, 0.5, 0.5)
+core.CanCollide = false
+core.Shape = "Ball"
+core.Material = "Neon"
+core.CanTouch = false
+core.Anchored = true
+
+light = Instance.new("PointLight", core)
+light.Range = 15
+light.Brightness = 0
+light.Color = Color3.new(1, 1, 1)
+
+spawn(function()
+ repeat game:GetService("RunService").Heartbeat:Wait()
+core.CFrame = handle.CFrame * CFrame.new(0, 0.35, -2.775)
+ until core.Parent == nil or handle.Parent == nil
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 12 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://8392900771"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local partTweenn2 = game:GetService("TweenService"):Create(light, TweenInfo.new(1.6, Enum.EasingStyle.Linear), {
+        Brightness = 5
+    })
+    partTweenn2:Play()
+
+  task.wait(6)
+field = Instance.new("Part", workspace)
+field.CanCollide = false
+field.Size = Vector3.new(1 ,1 ,1)
+field.Transparency = 0
+field.Color = Color3.fromRGB(255, 255, 252)
+field.Material = "Neon"
+field.Shape = "Ball"
+field.Anchored = false
+field.Position = core.Position
+
+field.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+ if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+humanoid:TakeDamage(30)
+humanoid:ChangeState("FallingDown")
+recoilDirection = (field.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -20
+ end
+end)
+
+game.Debris:AddItem(field, 10)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://1146689657"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", sound)
+sound.SoundId = "rbxassetid://1146690130"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", field)
+sound.SoundId = "rbxassetid://1462066094"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+
+local partTweenn2 = game:GetService("TweenService"):Create(light, TweenInfo.new(3, Enum.EasingStyle.Linear), {
+        Brightness = 0
+    })
+    partTweenn2:Play()
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+local recoilDirection = (mousehit - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Unit
+ game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity += recoilDirection * -150
+
+bodyVelocity = Instance.new("BodyVelocity", field)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - field.Position).Unit * 300
+                field.CFrame = CFrame.new(field.Position, mousehit)
+
+local partTweenn2 = game:GetService("TweenService"):Create(field, TweenInfo.new(2, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(20, 20, 20)
+    })
+    partTweenn2:Play()
+            end
+end)
