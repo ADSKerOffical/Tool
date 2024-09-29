@@ -1,0 +1,42 @@
+tool = game:GetObjects("rbxassetid://147737074")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.Name = "Gravity Gun"
+tool.TextureId = ""
+tool.ToolTip = "Make your enemies levitate above the ground"
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1.5 then
+                lastPressTime = currentTime 
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0.7, 0, 0)
+ball.Shape = "Ball"
+ball.Material = "SmoothPlastic"
+ball.Size = Vector3.new(1.5, 1.5, 1.5)
+ball.CanCollide = false
+ball.Position = tool.Handle.Position
+game.Debris:AddItem(ball, 8)
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 350
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+humanoid:TakeDamage(15)
+humanoid.RootPart.Velocity = ball.CFrame.LookVector * 100
+bodyVelocity = Instance.new("BodyVelocity", humanoid.RootPart)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = Vector3.new(0, 5, 0)
+game.Debris:AddItem(bodyVelocity, 6)
+ball:Destroy()
+  end
+end)
+            end
+end)
