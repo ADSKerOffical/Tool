@@ -1,0 +1,93 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Personification of Death"
+tool.ToolTip = "The King of Death decided to give a little bit of power to this little statue. It's better not to look at statue"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Color = Color3.new(0, 0, 0)
+handle.Locked = true
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://29515710"
+mesh.Scale = Vector3.new(3, 3, 3)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 20 then
+                lastPressTime = currentTime
+statue = Instance.new("Part", workspace)
+statue.Anchored = true
+statue.Size = Vector3.new(5, 15, 5)
+statue.CanCollide = false
+statue.Locked = true
+statue.Name = "Personification of Death"
+statue.Color = Color3.new(0, 0, 0)
+statue.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -7, 5)
+game.Debris:AddItem(statue, 15)
+
+lafs = Instance.new("SpecialMesh", statue)
+lafs.Scale = Vector3.new(15, 15, 15)
+lafs.MeshId = "rbxassetid://29515710"
+
+sparks = Instance.new("Sparkles", statue)
+sparks.TimeScale = 5
+sparks.SparkleColor = Color3.new(0, 0, 0)
+
+sound = Instance.new("Sound", statue)
+sound.SoundId = "rbxassetid://1228230799"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+
+partTweenn2 = game:GetService("TweenService"):Create(statue, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+        CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2.5, 5)
+    })
+    partTweenn2:Play()
+
+local function checkLookDirection(humanoid)
+  if humanoid.Parent == game.Players.LocalPlayer.Character then
+    return
+  end
+
+  if humanoid.Health <= 0 then
+    return
+  end
+
+  local distance = (statue.Position - humanoid.RootPart.Position).magnitude
+  if distance > 100 then
+    return
+  end
+
+  local lookVector = humanoid.RootPart.CFrame.LookVector
+  local objectVector = (statue.Position - humanoid.RootPart.Position).unit
+  local dotProduct = lookVector:Dot(objectVector)
+
+  if dotProduct > 0.95 then
+    humanoid:TakeDamage(1)
+    humanoid.Sit = true
+ partTweenn2 = game:GetService("TweenService"):Create(humanoid.RootPart, TweenInfo.new(0.05, Enum.EasingStyle.Linear), {
+        CFrame = humanoid.RootPart.CFrame
+    })
+    partTweenn2:Play()
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://4678745096"
+sound.Volume = 0.2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  end
+end
+
+spawn(function()
+repeat task.wait()
+  for _, descendant in ipairs(workspace:GetDescendants()) do
+    if descendant:IsA("Humanoid") then
+      checkLookDirection(descendant)
+    end
+  end
+until statue.Parent == nil
+end)
+  end
+end)
