@@ -1,0 +1,88 @@
+tool = game:GetObjects("rbxassetid://129197114")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.Name = "Empty-605.AV"
+tool.ToolTip = "The age has come when people began to create weapons so powerful that they can destroy cities"
+tool.TextureId = ""
+
+local handle = tool:FindFirstChild("Handle")
+
+for _, nig in pairs(handle:GetChildren()) do
+                        if nig:IsA("SpotLight") then
+   nig:Destroy()
+                        end
+                    end
+                    
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 3 then
+                lastPressTime = currentTime 
+ball = Instance.new("Part", workspace)
+ball.Position = handle.Position
+ball.CanCollide = false
+ball.Size = Vector3.new(1.25, 1.25, 3)
+game.Debris:AddItem(ball, 10)
+
+mesh = Instance.new("SpecialMesh", ball)
+mesh.MeshId = "rbxassetid://20518365"
+mesh.TextureId = "rbxassetid://19287687"
+mesh.Scale = Vector3.new(1.5, 1.5, 1.5)
+
+ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+ if humanoid and humanoid.Health > 0 and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+ball:Destroy()
+humanoid:TakeDamage(30)
+humanoid.RootPart.Velocity = ball.CFrame.LookVector * 100
+humanoid:ChangeState("FallingDown")
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://5509750509"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+game.Debris:AddItem(sound, 5)
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://8060079174"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ end
+end)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 125
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+spawn(function()
+repeat
+            local nearestHumanoid = nil
+            local nearestDistance = math.huge
+            for _, humanoidd in ipairs(workspace:GetDescendants()) do
+                if humanoidd:IsA("Humanoid") and humanoidd.Health ~= 0 and humanoidd.Parent ~= game.Players.LocalPlayer.Character then
+                    local distance = (humanoidd.RootPart.Position - ball.Position).Magnitude
+                    if distance < nearestDistance then
+                        nearestHumanoid = humanoidd
+                        nearestDistance = distance
+                    end
+                end
+            end
+
+            if nearestHumanoid then
+                bodyVelocity.Velocity = (nearestHumanoid.RootPart.Position - ball.Position).Unit * 125
+                ball.CFrame = CFrame.new(ball.Position, nearestHumanoid.RootPart.Position)
+            else
+                bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            end
+
+            task.wait(0.1)
+        until not ball or not ball.Parent
+ end)
+            end
+end)
