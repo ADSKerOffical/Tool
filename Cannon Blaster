@@ -1,0 +1,53 @@
+tool = game:GetObjects("rbxassetid://347766834")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.TextureId = ""
+tool.Name = "Cannon Blaster"
+tool.ToolTip = "It looks like a regular laser, but it shoots very powerful bullets"
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1.5 then
+                lastPressTime = currentTime
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0.5, 0, 0.8)
+ball.Shape = "Ball"
+ball.Material = "Neon"
+ball.Size = Vector3.new(2.5, 2.5, 2.5)
+ball.CanCollide = false
+ball.Position = tool.Handle.Position
+game.Debris:AddItem(ball, 8)
+
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://414077294"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://5509750509"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 300
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+humanoid:TakeDamage(50)
+humanoid.RootPart.Velocity = ball.CFrame.LookVector * 200
+humanoid:ChangeState("FallingDown")
+ball:Destroy()
+ end
+end)
+            end
+end)
