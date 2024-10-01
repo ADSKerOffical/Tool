@@ -1,0 +1,57 @@
+tool = game:GetObjects("rbxassetid://11986859059")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.Name = "Cleaver"
+tool.ToolTip = "Cut through entities with this small but dangerous knife"
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(90), math.rad(0))
+tool.GripPos = Vector3.new(0, 0, -1.7)
+
+local handle = tool.Handle
+
+for _, script in pairs(tool:GetDescendants()) do
+         if script:IsA("SpecialMesh") then
+script.Scale = script.Scale * 1.6
+         end
+                    end
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2156366946"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://186934753"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - Usuario.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 4.5 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(35)
+ humanoid.RootPart.Velocity = handle.CFrame.LookVector * 50
+ 
+ sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://785201669"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+            end
+end)
