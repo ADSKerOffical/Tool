@@ -1,0 +1,84 @@
+tool = game:GetObjects("rbxassetid://15804712096")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.TextureId = ""
+tool.ToolTip = "Powerful but heavy weapon"
+tool.Name = "Stop Sign"
+tool.Grip = CFrame.Angles(0, math.rad(90), 0)
+tool.GripPos = Vector3.new(0, -2, 0)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(90), math.rad(0))
+tool.GripPos = Vector3.new(0, -3, 0)
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://120732433"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(3)
+
+local Spin = Instance.new("BodyAngularVelocity")
+Spin.Name = "Spinning"
+Spin.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+Spin.MaxTorque = Vector3.new(0, math.huge, 0)
+Spin.AngularVelocity = Vector3.new(0, 15 ,0)
+game.Debris:AddItem(Spin, 4)
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(0.6, Enum.EasingStyle.Linear), {
+        WalkSpeed = 27
+    })
+    partTweenn2:Play()
+   spawn(function()
+ repeat task.wait(0.25)
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - tool.Handle.Position).magnitude
+        if distance <= 6 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+local recoilDirection = (tool:FindFirstChild("Handle").Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 150
+ humanoid:ChangeState("FallingDown")
+ humanoid:TakeDamage(60)
+ 
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://9116846750"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+until Spin.Parent == nil
+   end)
+ task.wait(4)
+tool.Grip = CFrame.Angles(0, math.rad(90), 0)
+tool.GripPos = Vector3.new(0, -2, 0)
+k:Stop()
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        WalkSpeed = 8
+    })
+    partTweenn2:Play()
+            end
+end)
+
+tool.Equipped:Connect(function()
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        WalkSpeed = 8
+    })
+    partTweenn2:Play()
+end)
+
+tool.Unequipped:Connect(function()
+local partTweenn2 = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(1.5, Enum.EasingStyle.Linear), {
+        WalkSpeed = 20
+    })
+    partTweenn2:Play()
+end)
