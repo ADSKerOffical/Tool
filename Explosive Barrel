@@ -1,0 +1,68 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Explosive Barrel"
+tool.ToolTip = "Throw an explosive barrel directly at your enemies"
+
+handle = game:GetObjects("rbxassetid://166201793")[1]
+handle.Parent = tool
+handle.Name = "Handle"
+handle.Anchored = false
+handle:FindFirstChildOfClass("SpecialMesh").Scale = handle:FindFirstChildOfClass("SpecialMesh").Scale / 1.4
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+  if currentTime - lastPressTime >= 8 then
+    lastPressTime = currentTime
+
+    local Anim = Instance.new("Animation")
+    Anim.AnimationId = "rbxassetid://31020869"
+    local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+    k:Play()
+    k:AdjustSpeed(1)
+
+    sound = Instance.new("Sound", tool.Handle)
+    sound.SoundId = "rbxassetid://9116673944"
+    sound.Volume = 1
+    sound.PlaybackSpeed = 1
+    sound.Looped = false
+    sound:Play()
+    task.wait(1)
+    sound = Instance.new("Sound", tool.Handle)
+    sound.SoundId = "rbxassetid://7430246006"
+    sound.Volume = 2
+    sound.PlaybackSpeed = 1
+    sound.Looped = false
+    sound:Play()
+
+    barrel = game:GetObjects("rbxassetid://166201793")[1]
+    barrel.Anchored = false
+    barrel.Parent = workspace
+    barrel.CFrame = game.Players.LocalPlayer.Character.PrimaryPart.CFrame * CFrame.new(0, 0, -1)
+    barrel.Velocity = handle.CFrame.LookVector * 100
+    game.Debris:AddItem(barrel, 10)
+
+    barrel.Touched:Connect(function(hitPart)
+      if hitPart:IsA("BasePart") then
+        sound = Instance.new("Sound", barrel)
+        sound.SoundId = "rbxassetid://9116887596"
+        sound.Volume = 1
+        sound.Pitch = 1
+        sound:Play()
+      end
+    end)
+    task.wait(3)
+explosion = Instance.new("Explosion")
+explosion.BlastRadius = 30
+explosion.ExplosionType = Enum.ExplosionType.Craters -- damages terrain
+explosion.Position = barrel.Position
+explosion.Parent = workspace
+
+sound = Instance.new("Sound", explosion)
+sound.SoundId = "rbxassetid://5801257793"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    barrel:Destroy()
+  end
+end)
