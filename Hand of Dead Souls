@@ -1,0 +1,133 @@
+tool = game:GetObjects("rbxassetid://2926486528")[1]
+tool.Parent = game.Players.LocalPlayer.Backpack
+tool.Name = "Hand of Dead Souls"
+game:GetService("Players").LocalPlayer.Character.Humanoid.MaxHealth += 150
+
+for _, script in pairs(tool:GetDescendants()) do
+  if script:IsA("ParticleEmitter") then
+    script:Destroy()
+  elseif script:IsA("Part") then
+script.CanCollide = false
+  end
+end
+
+local humanoidd = game.Players.LocalPlayer.Character.Humanoid
+local equipAnimation = nil
+local dmg = 0
+local kno = 150
+
+tool.Equipped:Connect(function()
+  repeat
+    task.wait(0.1)
+    for _, track in ipairs(humanoidd:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://182730322" or track.Animation.Name == "ToolNoneAnim" then
+        equipAnimation = track
+        break
+      end
+    end
+  until equipAnimation ~= nil
+  equipAnimation:Stop()
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+local currentTime = tick()
+            if currentTime - lastPressTime >= 0.8 then
+                lastPressTime = currentTime
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://186934658"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://28144425"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - tool.Handle.Position).magnitude
+        if distance <= 7 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ local recoilDirection = (tool:FindFirstChild("Handle").Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * kno
+ humanoid:TakeDamage(250 + dmg)
+ humanoidd.Health += 10
+ dmg += 0.1
+ 
+ sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://429400881"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ 
+   if humanoid.Health <= 0 then
+ humanoidd.MaxHealth += 100
+ humanoidd.Health += humanoidd.MaxHealth / 10
+ dmg += 20
+ kno += 5
+   end
+end
+   end
+end)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+local TextLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
+
+TextLabel.Parent = ScreenGui
+TextLabel.Text = "Max Health: "
+TextLabel.BackgroundTransparency = 1
+TextLabel.Size = UDim2.new(0.1, 0, 0.1, 0)
+TextLabel.Position = UDim2.new(0.7, 0, 0.9, 0)
+TextLabel.FontSize = Enum.FontSize.Size24
+TextLabel.Font = Enum.Font.Arial
+TextLabel.TextColor3 = Color3.new(1, 1, 1)
+TextLabel.TextScaled = true
+TextLabel.TextWrapped = true
+
+local TextLabel1 = Instance.new("TextLabel")
+TextLabel1.Parent = ScreenGui
+TextLabel1.Text = "Damage: "
+TextLabel1.BackgroundTransparency = 1
+TextLabel1.Size = UDim2.new(0.1, 0, 0.1, 0)
+TextLabel1.Position = UDim2.new(0.8, 0, 0.9, 0)
+TextLabel1.FontSize = Enum.FontSize.Size24
+TextLabel1.Font = Enum.Font.Arial
+TextLabel1.TextColor3 = Color3.new(1, 1, 1)
+TextLabel1.TextScaled = true
+TextLabel1.TextWrapped = true
+
+local TextLabel2 = Instance.new("TextLabel")
+TextLabel2.Parent = ScreenGui
+TextLabel2.Text = "Knockback: "
+TextLabel2.BackgroundTransparency = 1
+TextLabel2.Size = UDim2.new(0.1, 0, 0.1, 0)
+TextLabel2.Position = UDim2.new(0.9, 0, 0.9, 0)
+TextLabel2.FontSize = Enum.FontSize.Size24
+TextLabel2.Font = Enum.Font.Arial
+TextLabel2.TextColor3 = Color3.new(1, 1, 1)
+TextLabel2.TextScaled = true
+TextLabel2.TextWrapped = true
+
+game:GetService("RunService").Heartbeat:Connect(function()
+if game.Players.LocalPlayer.Character.Humanoid then
+ TextLabel.Text = "Max Health: " .. tonumber(math.floor(game.Players.LocalPlayer.Character.Humanoid.MaxHealth))
+end
+ TextLabel1.Text = "Damage: " .. tonumber(math.floor(250 + dmg))
+ TextLabel2.Text = "Knockback: " .. tonumber(math.floor(kno))
+end)
