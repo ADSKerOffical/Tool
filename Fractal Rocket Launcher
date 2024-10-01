@@ -101,7 +101,7 @@ sound:Play()
 
 partTweenn2 = game:GetService("TweenService"):Create(cra, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
         Transparency = 1,
-        Size = Vector3.new(300, 300, 300)
+        Size = Vector3.new(400, 400, 400)
     })
     partTweenn2:Play()
 
@@ -109,7 +109,7 @@ local foundHumanoids = {}
 for _, v in pairs(workspace:GetDescendants()) do
     if v:IsA("Humanoid") and v.RootPart then
         local distance = (v.RootPart.Position - cra.Position).magnitude
-        if distance <= 205 then
+        if distance <= 305 then
             table.insert(foundHumanoids, v)
         end
     end
