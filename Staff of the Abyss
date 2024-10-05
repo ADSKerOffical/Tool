@@ -1,0 +1,254 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Staff of the Abyss"
+tool.ToolTip = "I think you have the real weapon of the gods in your hands"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local canattack = true
+
+staff = Instance.new("SpecialMesh", handle)
+staff.Scale = Vector3.new(2, 2, 2)
+staff.MeshId = "rbxassetid://84102534"
+staff.TextureId = "rbxassetid://84102498"
+
+orb = Instance.new("Part", tool)
+orb.Name = "Orb"
+orb.Shape = "Ball"
+orb.Anchored = true
+orb.Color = Color3.fromRGB(150, 50, 200)
+orb.CanCollide = false
+orb.Transparency = 1
+orb.Size = Vector3.new(0.45, 0.45, 0.45)
+orb.Material = Enum.Material.Neon
+
+for _, side in ipairs(Enum.NormalId:GetEnumItems()) do
+  texture = Instance.new("Decal", orb)
+  texture.Texture = "rbxassetid://178147795"
+  texture.Face = side
+    end
+    
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.Enabled = false
+ScreenGui.ResetOnSpawn = true
+    
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button.Position = UDim2.new(0.86, 0, 0.4, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Domain"
+Button.Parent = ScreenGui
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+    local currentTime = tick()
+            if currentTime - lastPressTime >= 60 then
+                lastPressTime = currentTime 
+canattack = false
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://9057738420"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://183412246"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(0)
+  task.wait(8)
+k:AdjustSpeed(1.5)
+for _, side in ipairs(orb:GetDescendants()) do
+  if side:IsA("Decal") then
+side.Transparency = 1
+  end
+    end
+skybox = Instance.new("Part", workspace)
+skybox.Size = Vector3.new(0,0,0)
+skybox.Anchored = true
+skybox.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+skybox.CanCollide = true
+game.Debris:AddItem(skybox, 40)
+
+skyboxmesh = Instance.new("SpecialMesh",skybox)
+skyboxmesh.MeshId = "http://www.roblox.com/asset/?id=1527559"
+skyboxmesh.TextureId = "http://www.roblox.com/asset/?id=178147795"
+skyboxmesh.VertexColor = Vector3.new(0.9, 0.9, 0.9)
+skyboxmesh.Scale = Vector3.new(0, 0, 0)
+
+local function damage()
+ local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - skybox.Position).magnitude
+        if distance <= 350 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+  for _, humanoid in pairs(foundHumanoids) do
+humanoid:TakeDamage(humanoid.MaxHealth / 200 + 1)
+humanoid.MaxHealth = humanoid.MaxHealth - humanoid.MaxHealth / 200
+humanoid.Sit = true
+game.Players.LocalPlayer.Character.Humanoid.MaxHealth += humanoid.MaxHealth / 200
+game.Players.LocalPlayer.Character.Humanoid.Health += humanoid.MaxHealth / 200
+  end
+end
+
+ partTweenn2 = game:GetService("TweenService"):Create(skyboxmesh, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(-10, -400, -10)
+    })
+    partTweenn2:Play()
+task.wait(0.8)
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://2162238854"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ partTweenn2 = game:GetService("TweenService"):Create(skyboxmesh, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(-400, -400, -400)
+    })
+    partTweenn2:Play()
+task.wait(0.6)
+spawn(function()
+repeat task.wait(0.025)
+damage()
+skybox.CFrame = skybox.CFrame * CFrame.fromEulerAnglesXYZ(0,math.rad(0.5),0)
+until skybox.Parent ~= workspace
+end)
+ loopd = Instance.new("Sound", skyboxmesh)
+loopd.SoundId = "rbxassetid://9063726568"
+loopd.Volume = 2
+loopd.PlaybackSpeed = 1
+loopd.Looped = true
+loopd:Play()
+  task.wait(35)
+canattack = true
+loopd:Stop()
+for _, side in ipairs(orb:GetDescendants()) do
+  if side:IsA("Decal") then
+side.Transparency = 0
+  end
+    end
+ partTweenn2 = game:GetService("TweenService"):Create(skyboxmesh, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(-10, -400, -10)
+    })
+    partTweenn2:Play()
+  task.wait(1.1)
+ partTweenn2 = game:GetService("TweenService"):Create(skyboxmesh, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.zero
+    })
+    partTweenn2:Play()
+            end
+end)
+
+spawn(function()
+repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild(tool.Name)
+loop = Instance.new("Sound", orb)
+loop.SoundId = "rbxassetid://2162238374"
+loop.Volume = 0.75
+loop.PlaybackSpeed = 1
+loop.Looped = true
+loop:Play()
+end)
+
+spawn(function()
+repeat task.wait()
+  orb.CFrame = orb.CFrame:lerp(handle.CFrame * CFrame.new(-0.5, 0, 5), 0.3)
+until handle.Parent == nil or tool.Parent == nil or orb.Parent == nil
+end)
+
+tool.Equipped:Connect(function()
+ScreenGui.Enabled = true
+ pcall(function()
+local partTweenn2 = game:GetService("TweenService"):Create(loop, TweenInfo.new(0.8, Enum.EasingStyle.Linear), {
+        PlaybackSpeed = 1
+    })
+    partTweenn2:Play()
+ end)
+end)
+
+tool.Unequipped:Connect(function()
+ScreenGui.Enabled = false
+ pcall(function()
+local partTweenn2 = game:GetService("TweenService"):Create(loop, TweenInfo.new(0.8, Enum.EasingStyle.Linear), {
+        PlaybackSpeed = 0
+    })
+    partTweenn2:Play()
+ end)
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 and canattack == true then
+                lastPressTime = currentTime 
+ball = Instance.new("Part", workspace)
+ball.Anchored = false
+ball.Size = orb.Size
+ball.CanCollide = false
+ball.Transparency = 1
+ball.Position = orb.Position
+ball.Shape = "Ball"
+ball.Material = "Neon"
+game.Debris:AddItem(ball, 8)
+
+ball.Touched:Connect(function(hit)
+ huma = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if huma and huma.Parent ~= game.Players.LocalPlayer.Character then
+huma:TakeDamage(30)
+local recoilDirection = (ball.Position - huma.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 250
+  end
+end)
+
+sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://6878476054"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+local powe = 1
+local rot = 0
+
+for _, sideb in ipairs(Enum.NormalId:GetEnumItems()) do
+  textureb = Instance.new("Decal", ball)
+  textureb.Texture = "rbxassetid://178147795"
+  textureb.Face = sideb
+    end
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 10
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+   partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(1.5, Enum.EasingStyle.Linear), {
+        Size = Vector3.new(15, 15, 15)
+    })
+    partTweenn2:Play()
+spawn(function()
+repeat task.wait()
+powe += 1
+rot += 0.25
+mouseh = game.Players.LocalPlayer:GetMouse().Hit.Position
+bodyVelocity.Velocity = (mouseh - ball.Position).Unit * (10 + powe)
+ball.CFrame = ball.CFrame * CFrame.Angles(math.rad(rot / 3.5), math.rad(rot), math.rad(rot / 2))
+until ball.Parent == nil
+end)
+ task.wait(6)
+partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Size = Vector3.zero
+    })
+    partTweenn2:Play()
+            end
+end)
