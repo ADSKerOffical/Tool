@@ -1,0 +1,137 @@
+Staff = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+Staff.Name = "Natural Staff" 
+Staff.ToolTip = "The Staff of Nature is the best staff for vegetation, although it is useless when fighting other mages, the true embodiment of calm"
+
+StaffHandle = Instance.new("Part", Staff)
+StaffHandle.Name = "Handle"
+StaffHandle.Size = Vector3.new(1, 1, 1)
+StaffHandle.Locked = true
+
+StaffMesh = Instance.new("SpecialMesh", StaffHandle)
+StaffMesh.MeshId = "rbxassetid://29330256"
+StaffMesh.TextureId = "rbxassetid://29330233"
+StaffMesh.Scale = Vector3.new(0.8, 0.8, 0.8)
+Staff.GripPos = Vector3.new(0, 0, -0.5)
+
+local lastPressTime = 0
+Staff.Activated:Connect(function()
+local currentTime = tick()
+            if currentTime - lastPressTime >= 5 then
+                lastPressTime = currentTime
+ local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://218504594"
+local k = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2.5)
+ 
+ shoot = Instance.new("Part", workspace)
+ shoot.Size = Vector3.new(4, 8, 4)
+ shoot.Rotation = Vector3.new(0, 90, 0)
+ shoot.Locked = true
+ shoot.CanCollide = false
+ shoot.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+ game.Debris:AddItem(shoot, 5)
+ 
+ shootm = Instance.new("SpecialMesh", shoot)
+ shootm.MeshId = "rbxassetid://8214233995"
+ shootm.TextureId = "rbxassetid://8214234053"
+ shootm.Scale = Vector3.new(1, 1.5, 1)
+ 
+ Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", shoot)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - shoot.Position).Unit * 250
+                shoot.CFrame = CFrame.new(shoot.Position, mousehit)
+   
+   shoot.Touched:Connect(function(hit)
+    coroutine.wrap(function()
+ humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+       if humanoid and humanoid.Health > 0 and humanoid.RootPart and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+    shoot:Destroy()
+    humanoid:TakeDamage(25)
+    humanoid.RootPart.Anchored = true
+    growing = Instance.new("Part", humanoid.RootPart)
+    growing.Position = humanoid.RootPart.Position
+    growing.Size = Vector3.zero
+    growing.Anchored = true
+    growing.CanCollide = false
+    game.Debris:AddItem(growing, 3)
+    
+    grow = Instance.new("SpecialMesh", growing)
+    grow.Scale = Vector3.zero
+    grow.MeshId = "rbxassetid://8214233995"
+    grow.TextureId = "rbxassetid://8214234053"
+    
+    partTweenn1 = game:GetService("TweenService"):Create(grow, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(2, 2, 2)
+    })
+    partTweenn1:Play()
+  wait(3)
+    humanoid.RootPart.Anchored = false
+       end
+     end)()
+   end)
+ end
+end)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.Enabled = false
+ScreenGui.ResetOnSpawn = true
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button.Position = UDim2.new(0.86, 0, 0.4, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Help from nature"
+Button.Parent = ScreenGui
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+    local currentTime = tick()
+            if currentTime - lastPressTime >= 20 then
+                lastPressTime = currentTime 
+       local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://183412246"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+sound = Instance.new("Sound", StaffHandle)
+sound.SoundId = "rbxassetid://9038523649"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+    Light = Instance.new("PointLight", StaffHandle)
+    Light.Range = 50
+    Light.Color = Color3.new(0, 1, 0)
+    Light.Brightness = 3
+    game.Debris:AddItem(Light, 4.5)
+    
+    HealthTweenn = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.Humanoid, TweenInfo.new(1.5, Enum.EasingStyle.Linear), {
+        Health = game.Players.LocalPlayer.Character.Humanoid.Health + 50
+    })
+    HealthTweenn:Play()
+    
+    task.wait(2.5)
+    
+    partTweenn2 = game:GetService("TweenService"):Create(Light, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+        Brightness = 0
+    })
+    partTweenn2:Play()
+            end
+end)
+
+Staff.Equipped:Connect(function()
+ ScreenGui.Enabled = true
+end)
+
+Staff.Unequipped:Connect(function()
+ ScreenGui.Enabled = false
+end)
