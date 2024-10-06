@@ -1,0 +1,89 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Maxwell"
+tool.ToolTip = ""
+tool.Grip = CFrame.Angles(math.rad(0), math.rad(0), math.rad(0))
+tool.GripPos = Vector3.new(0, 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://11390783129"
+mesh.TextureId = "rbxassetid://11390783210"
+mesh.Scale = Vector3.new(0.001, 0.001, 0.001)
+
+tool.Equipped:Connect(function()
+ ff = Instance.new("ForceField", game.Players.LocalPlayer.Character)
+end)
+
+tool.Unequipped:Connect(function()
+ game.Players.LocalPlayer.Character:FindFirstChildOfClass("ForceField"):Destroy()
+end)
+
+tool.Activated:Connect(function()
+pew = Instance.new("Sound", tool.Handle)
+pew.SoundId = "rbxassetid://2216910282"
+pew.Volume = 1
+pew.PlaybackSpeed = 1
+pew.Looped = false
+pew:Play()
+
+shoot = Instance.new("Part", workspace)
+shoot.Anchored = false
+shoot.Position = tool.Handle.Position
+shoot.Size = Vector3.new(2, 2, 2)
+shoot.Shape = "Ball"
+shoot.CanCollide = false
+game.Debris:AddItem(shoot, 15)
+
+cat = Instance.new("SpecialMesh", shoot)
+cat.MeshId = "rbxassetid://11390783129"
+cat.TextureId = "rbxassetid://11390783210"
+cat.Scale = Vector3.new(0.001, 0.001, 0.001)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", shoot)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - shoot.Position).Unit * 300
+                shoot.CFrame = CFrame.new(shoot.Position, mousehit)
+                
+   shoot.Touched:Connect(function(hit)
+ huim = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if huim and huim.Parent ~= game.Players.LocalPlayer.Character and huim.Health > 0 then
+shoot:Destroy()
+for _, part in pairs(huim.Parent:GetDescendants()) do
+                        if part:IsA("BasePart") then
+   part.AssemblyLinearVelocity = Vector3.zero
+   part.CanTouch = false
+   part.Transparency = 1
+                        end
+                    end
+     if huim.Parent:FindFirstChildOfClass("ForceField") then
+   huim.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+     end
+      huim:ChangeState("Dead")
+      huim:TakeDamage(math.huge)
+      huim.Health = 0
+        cati = Instance.new("Part", workspace)
+        cati.CFrame = huim.Parent.Head.CFrame
+        cati.Locked = true
+        cati.CanTouch = false
+        cati.Anchored = false
+        game.Debris:AddItem(cati, 120)
+        
+        caf = Instance.new("SpecialMesh", cati)
+        caf.Scale = Vector3.new(0.001, 0.001, 0.001)
+        caf.MeshId = "rbxassetid://11390783129"
+        caf.TextureId = "rbxassetid://11390783210"
+        
+        meow = Instance.new("Sound", cati)
+        meow.SoundId = "rbxassetid://1091083826"
+        meow.Volume = 2
+        meow.PlaybackSpeed = 1
+        meow.Looped = false
+        meow:Play()
+  end
+   end)
+end)
