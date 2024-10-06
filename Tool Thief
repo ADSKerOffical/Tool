@@ -1,0 +1,55 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Tool Thief"
+tool.ToolTip = "Steal tools with this tool"
+tool.Grip = CFrame.Angles(math.rad(-90), math.rad(20), math.rad(-115))
+tool.GripPos = Vector3.new(-0.5, 1.2, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Material = "SmoothPlastic"
+handle.Color = Color3.new(1, 1, 1)
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://32054761"
+mesh.Scale = Vector3.new(0.7, 0.7, 0.7)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 5 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://71526331"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1.65)
+task.wait(0.5)
+  
+  local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(game.Players:GetDescendants()) do
+    if v:IsA("Player") and v ~= Usuario then
+        local distance = (v.Character.Humanoid.RootPart.Position - handle.Position).magnitude
+        if distance <= 8 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, players in pairs(foundHumanoids) do
+ players.Character.Humanoid:TakeDamage(10)
+ players.Character.Humanoid:ChangeState("FallingDown")
+ players.Character.Humanoid.RootPart.Velocity = handle.CFrame.LookVector * -150
+  if players.Backpack and players.Character:FindFirstChildOfClass("Tool") then
+ players.Character:FindFirstChildOfClass("Tool").Parent = game.Players.LocalPlayer.Backpack
+ 
+ sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://9105467029"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  end
+end
+            end
+end)
