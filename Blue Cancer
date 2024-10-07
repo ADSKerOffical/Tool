@@ -1,0 +1,124 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Blue Cancer"
+tool.ToolTip = "It claps very loudly"
+tool.Grip = CFrame.Angles(math.rad(0), math.rad(0), math.rad(0))
+tool.GripPos = Vector3.new(0, 0, 0)
+
+mainpart = Instance.new("Part", tool)
+mainpart.Transparency = 0
+mainpart.Name = "Handle"
+mainpart.Size = Vector3.zero
+
+arm1p = Instance.new("Part", mainpart)
+arm1p.Size = Vector3.new(1, 1, 1)
+
+arm2p = Instance.new("Part", mainpart)
+arm2p.Size = Vector3.new(1, 1, 1)
+
+headp = Instance.new("Part", mainpart)
+headp.Size = Vector3.new(1, 1, 1)
+
+arm1 = Instance.new("SpecialMesh", arm1p)
+arm1.MeshId = "rbxassetid://13200088262"
+arm1.TextureId = "rbxassetid://13200088371"
+arm1.Scale = Vector3.new(0.6, 0.6, 0.6)
+
+arm2 = arm1:Clone()
+arm2.Parent = arm2p
+
+head = Instance.new("SpecialMesh", headp)
+head.MeshId = "rbxassetid://13200081913"
+head.TextureId = "rbxassetid://13200082055"
+head.Scale = Vector3.new(0.7, 0.7, 0.7)
+
+armjoint1 = Instance.new("Weld", mainpart)
+armjoint1.Part0 = mainpart
+armjoint1.Part1 = arm1p
+armjoint1.C0 = CFrame.new(-1, 0, -0.3) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0))
+
+armjoint2 = Instance.new("Weld", mainpart)
+armjoint2.Part0 = mainpart
+armjoint2.Part1 = arm2p
+armjoint2.C0 = CFrame.new(1, 0, -0.3) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(180))
+
+headjoint = Instance.new("Weld", mainpart)
+headjoint.Part0 = mainpart
+headjoint.Part1 = headp
+headjoint.C0 = CFrame.new(0, 0, 0)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 20 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://1060191237"
+sound.Volume = 5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+shockwave = Instance.new("Part", workspace)
+shockwave.CFrame = tool.Handle.CFrame
+shockwave.Size = Vector3.zero
+shockwave.Material = "SmoothPlastic"
+shockwave.Color = Color3.new(1, 1, 1)
+shockwave.Anchored = true
+shockwave.CanCollide = false
+game.Debris:AddItem(shockwave, 4)
+
+modelsw = Instance.new("SpecialMesh", shockwave)
+modelsw.Scale = Vector3.new(1, 1, 1)
+modelsw.MeshId = "rbxassetid://173770780"
+
+local partTweenn2 = game:GetService("TweenService"):Create(shockwave, TweenInfo.new(0.7, Enum.EasingStyle.Quad), {
+        Transparency = 1
+    })
+    partTweenn2:Play()
+    
+local partTweenn2 = game:GetService("TweenService"):Create(modelsw, TweenInfo.new(0.7, Enum.EasingStyle.Quad), {
+        Scale = Vector3.new(120, 1, 120)
+    })
+    partTweenn2:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - Usuario.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 85 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ coroutine.wrap(function()
+  humanoid:TakeDamage(humanoid.MaxHealth / 2)
+  humanoid:ChangeState("FallingDown")
+  local recoilDirection = (tool:FindFirstChild("Handle").Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 300
+  spawn(function()
+  local ra = humanoid.Parent["Right Arm"]
+  local la = humanoid.Parent["Left Arm"]
+  ra.Parent = nil
+  la.Parent = nil
+   wait(15)
+  ra.Parent = humanoid.Parent
+  la.Parent = humanoid.Parent
+   end)
+ end)()
+end
+            end
+end)
+
+spawn(function()
+repeat wait() until tool.Parent == game.Players.LocalPlayer.Character
+game.Players.LocalPlayer.Character.Humanoid.MaxHealth += 1000
+sound = Instance.new("Sound", workspace)
+sound.SoundId = "rbxassetid://2261507666"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
