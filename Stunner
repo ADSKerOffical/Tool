@@ -1,0 +1,77 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Stunner"
+tool.ToolTip = "Causes humanoids to move in a random direction and not use tools"
+tool.GripPos = Vector3.new(0, -0.7, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://72603563"
+mesh.TextureId = "rbxassetid://72603603"
+mesh.Scale = Vector3.new(1.5, 1.5, 1.5)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://138811664"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ task.wait(0.8)
+ expl = Instance.new("MeshPart", workspace)
+ expl.MeshId = "rbxassetid://1185246"
+ expl.Color = Color3.new(1, 1, 1)
+ expl.Size = Vector3.new(0, 0.2, 0)
+ expl.Anchored = true
+ expl.Position = tool.Parent.Humanoid.RootPart.Position
+ expl.CanCollide = false
+ game.Debris:AddItem(expl, 4)
+ 
+ partTweenn2 = game:GetService("TweenService"):Create(expl, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(45, 0.2, 45),
+        Color = Color3.new(0.3, 0.3, 0.3)
+    })
+    partTweenn2:Play()
+ 
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - tool.Handle.Position).magnitude
+        if distance <= 30 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(30)
+local la = humanoid.Parent:FindFirstChild("Left Arm")
+local ra = humanoid.Parent:FindFirstChild("Right Arm")
+la.Parent = nil
+ra.Parent = nil
+humanoid.PlatformStand = true
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://525213244"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ coroutine.wrap(function()
+  task.delay(6, function()
+la.Parent = humanoid.Parent
+ra.Parent = humanoid.Parent
+humanoid.PlatformStand = false
+ end)
+ end)()
+end
+            end
+end)
