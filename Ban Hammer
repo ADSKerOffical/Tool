@@ -1,0 +1,256 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Ban Hammer"
+tool.TextureId = "http://www.roblox.com/asset/?id=10684453"
+tool.ToolTip = "Ban Hammer"
+tool.GripPos = Vector3.new(0, -0.75, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+hammer = Instance.new("SpecialMesh", handle)
+hammer.MeshId = "http://www.roblox.com/asset/?id=10604848"
+hammer.TextureId = "http://www.roblox.com/asset?id=10605252"
+hammer.Scale = Vector3.new(0.5, 0.5, 0.5)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime 
+ coroutine.wrap(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://74897796"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2.5)
+
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "http://www.roblox.com/asset/?id=10730819"
+sound.Volume = 4
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://3802269741"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ball = Instance.new("Part", workspace)
+ball.Locked = true
+ball.Position = tool.Handle.Position
+ball.Size = Vector3.zero
+ball.Anchored = true
+ball.Material = "Neon"
+ball.Shape = "Ball"
+ball.Color = Color3.new(0.8, 0.8, 0.8)
+ball.CanCollide = false
+ball.CastShadow = false
+game.Debris:AddItem(ball, 1)
+
+ for i = 1, 25 do
+obj = Instance.new("Part", workspace)
+obj.Position = tool.Parent.Humanoid.RootPart.Position + Vector3.new(math.random(-150, 150), 0, math.random(-150, 150))
+obj.Anchored = false
+obj.Material = tool.Parent.Humanoid.FloorMaterial
+obj.Shape = "CornerWedge"
+obj.Size = Vector3.new(2.4, 2.4, 2.4)
+obj.Color = Color3.new(0.5, 0.5, 0.5)
+local recoilDirection = (tool:FindFirstChild("Handle").Position - obj.Position).Unit
+ obj.Velocity += recoilDirection * -150
+game.Debris:AddItem(obj, 15)
+ end
+ 
+if tool.Parent.Humanoid:GetState() ~= Enum.HumanoidStateType.Freefall then
+crater1 = Instance.new("Part", workspace)
+crater1.Transparency = 1
+crater1.CanCollide = false
+crater1.Position = tool.Parent.Humanoid.RootPart.Position - Vector3.new(0, 3, 0)
+crater1.Size = Vector3.new(150, 1, 150)
+crater1.Anchored = true
+game.Debris:AddItem(crater1, 20)
+
+dec1 = Instance.new("Decal", crater1)
+dec1.Texture = "rbxassetid://10228065900"
+dec1.Transparency = 0.1
+dec1.Face = Enum.NormalId.Top
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(200, 200, 200),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+    
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - Usuario.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 200 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  if humanoid.Parent:FindFirstChildOfClass("ForceField") then
+   humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+  end
+  local recoilDirection = (ball.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 500
+ humanoid:TakeDamage(math.huge)
+ humanoid:ChangeState("Dead")
+end
+   end)()
+            end
+end)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.Enabled = false
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button.Position = UDim2.new(0.86, 0, 0.4, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Throw the Hammer"
+Button.Parent = ScreenGui
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+    local currentTime = tick()
+            if currentTime - lastPressTime >= 1.5 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://2459110596"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+
+sh = Instance.new("Part", workspace)
+sh.Position = tool.Handle.Position
+sh.CanCollide = false
+sh.Size = Vector3.new(1.25, 1.25, 3)
+game.Debris:AddItem(ball, 10)
+
+mesh = Instance.new("SpecialMesh", sh)
+mesh.MeshId = tostring(hammer.MeshId)
+mesh.TextureId = tostring(hammer.TextureId)
+mesh.Scale = hammer.Scale
+
+sh.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+ if humanoid and humanoid.Health > 0 and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+sh:Destroy()
+ if humanoid.Parent:FindFirstChildOfClass("ForceField") then
+  humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+ end
+humanoid:TakeDamage(math.huge)
+humanoid:ChangeState("Dead")
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://147722910"
+sound.Volume = 4.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://3802269741"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - humanoid.RootPart.Position).magnitude
+        if distance <= 17 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoidd in pairs(foundHumanoids) do
+ humanoidd:TakeDamage(humanoidd.MaxHealth / 2)
+ humanoidd:ChangeState("FallingDown")
+ local recoilDirection = (humanoid.RootPart.Position - humanoidd.RootPart.Position).Unit
+ humanoidd.RootPart.Velocity += recoilDirection * -250
+end
+
+        Highlight = Instance.new("Highlight")
+        Highlight.Parent = humanoid.Parent
+        Highlight.Adornee = humanoid.Parent
+        Highlight.FillTransparency = 0
+        Highlight.FillColor = Color3.fromRGB(255 ,0 ,0)
+        Highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
+        Highlight.OutlineTransparency = 0
+        Highlight.DepthMode = "Occluded"
+        
+   partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        OutlineTransparency = 1,
+        FillTransparency = 1
+    })
+    partTweenn2:Play()
+
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+  if part:IsA("BasePart") then
+part.Anchored = true
+  partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 1
+    })
+  partTweenn2:Play()
+   end
+  end
+ end
+end)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", sh)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - sh.Position).Unit * 125
+                sh.CFrame = CFrame.new(sh.Position, mousehit)
+spawn(function()
+repeat
+            local nearestHumanoid = nil
+            local nearestDistance = math.huge
+            for _, humanoidd in ipairs(workspace:GetDescendants()) do
+                if humanoidd:IsA("Humanoid") and humanoidd.Health ~= 0 and humanoidd.Parent ~= game.Players.LocalPlayer.Character then
+                    local distance = (humanoidd.RootPart.Position - sh.Position).Magnitude
+                    if distance < nearestDistance then
+                        nearestHumanoid = humanoidd
+                        nearestDistance = distance
+                    end
+                end
+            end
+
+            if nearestHumanoid then
+                bodyVelocity.Velocity = (nearestHumanoid.RootPart.Position - sh.Position).Unit * 375
+                sh.CFrame = CFrame.new(sh.Position, nearestHumanoid.RootPart.Position)
+            else
+                bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            end
+
+            task.wait(0.1)
+        until not ball or not ball.Parent
+ end)
+            end
+end)
+
+tool.Equipped:Connect(function()
+ ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+ ScreenGui.Enabled = false
+end)
