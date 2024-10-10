@@ -1,0 +1,29 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Regeneration Potion"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+pot = Instance.new("SpecialMesh", handle)
+pot.Scale = Vector3.new(1.2, 1.2, 1.2)
+pot.TextureId = "rbxassetid://72639133"
+pot.MeshId = "rbxassetid://72639103"
+
+tool.Activated:Connect(function()
+ if tool.Parent.Humanoid:GetState() ~= Enum.HumanoidStateType.Dead and tool.Parent.Humanoid.Health ~= tool.Parent.Humanoid.MaxHealth then
+tool.ManualActivationOnly = true
+ sound = Instance.new("Sound", game.Players.LocalPlayer.Character.PrimaryPart)
+sound.SoundId = "rbxassetid://2245190929"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ task.wait(2)
+partTweenn2 = game:GetService("TweenService"):Create(tool.Parent.Humanoid, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Health = tool.Parent.Humanoid.Health + 50
+    })
+    partTweenn2:Play()
+tool:Destroy()
+ end
+end)
