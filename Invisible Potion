@@ -1,0 +1,46 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Invisible Potion"
+tool.ToolTip = "Makes you invisible for a while"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+pot = Instance.new("SpecialMesh", handle)
+pot.Scale = Vector3.new(1.2, 1.2, 1.2)
+pot.TextureId = "rbxassetid://72639133"
+pot.MeshId = "rbxassetid://72639103"
+
+tool.Activated:Connect(function()
+tool.ManualActivationOnly = true
+ sound = Instance.new("Sound", game.Players.LocalPlayer.Character.PrimaryPart)
+sound.SoundId = "rbxassetid://2245190929"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ task.wait(2)
+for _, part in ipairs(tool.Parent:GetDescendants()) do
+        if part:IsA("BasePart") then
+    partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 1
+    })
+    partTweenn2:Play()
+       elseif part:IsA("Decal") then
+     part.Transparency = 1
+        end
+    end
+tool:Destroy()
+  task.delay(15, function()
+for _, part in ipairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if part:IsA("BasePart") then
+    partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+    partTweenn2:Play()
+        elseif part:IsA("Decal") then
+      part.Transparency = 0
+        end
+    end
+  end)
+end)
