@@ -1,0 +1,424 @@
+back = Instance.new("Part", game.Players.LocalPlayer.Character:FindFirstChild("Torso"))
+back.CanCollide = false
+back.Size = Vector3.new(2, 2, 0.5)
+back.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("Torso").CFrame * CFrame.Angles(1, math.rad(0), 0)
+
+attach = Instance.new("Weld", game.Players.LocalPlayer.Character:FindFirstChild("Torso"))
+attach.Part0 = back
+attach.Part1 = game.Players.LocalPlayer.Character:FindFirstChild("Torso")
+attach.C0 = CFrame.new(0, 0, -0.75) * CFrame.Angles(0, 0, 40) 
+
+sworddec = Instance.new("SpecialMesh", back)
+sworddec.TextureId = "rbxassetid://83509797"
+sworddec.MeshId = "rbxassetid://83509558"
+
+local Anim1 = Instance.new("Animation")
+Anim1.AnimationId = "rbxassetid://74909551"
+slash1a = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim1)
+
+local Anim2 = Instance.new("Animation")
+Anim2.AnimationId = "rbxassetid://74909537"
+slash2a = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim2)
+
+sword = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+sword.Name = "Sword of Doomsday"
+sword.Grip = CFrame.Angles(0, math.rad(-90), 0)
+sword.GripPos = Vector3.new(0, -3, 0)
+
+handle = Instance.new("Part", sword)
+handle.Name = "Handle"
+handle.Size = Vector3.new(1, 3, 1)
+
+handle.Touched:Connect(function(hit)
+ humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character and humanoid.Health > 0 then
+humanoid.BreakJointsOnDeath = false
+humanoid.Parent:BreakJoints()
+humanoid:ChangeState("Dead")
+humanoid.RootPart.Velocity = handle.CFrame.LookVector * 100
+  end
+end)
+
+texture = Instance.new("SpecialMesh", handle)
+texture.MeshId = "rbxassetid://83509558"
+texture.TextureId = "rbxassetid://83509797"
+texture.Scale = Vector3.new(1, 1, 1)
+
+sas = Instance.new("Sound", handle)
+sas.SoundId = "rbxassetid://7118966167"
+sas.Volume = 1
+sas.PlaybackSpeed = 1
+sas.Looped = false
+
+ses = Instance.new("Sound", handle)
+ses.SoundId = "rbxassetid://7118966437"
+ses.Volume = 2
+ses.PlaybackSpeed = 1
+ses.Looped = false
+
+sues = Instance.new("Sound", back)
+sues.SoundId = "rbxassetid://9119747270"
+sues.Volume = 1
+sues.PlaybackSpeed = 1
+sues.Looped = false
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.ResetOnSpawn = true
+ScreenGui.Enabled = false
+
+Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button.Position = UDim2.new(0.86, 0, 0.4, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Speed Strike"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+    fhitb = Instance.new("Part", workspace)
+fhitb.Transparency = 1
+fhitb.CanCollide = false
+fhitb.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+fhitb.Anchored = true
+game.Debris:AddItem(fhitb, 5)
+
+for _, part in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            partTweenn1 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Transparency = 1
+    })
+    partTweenn1:Play()
+    
+for _, accessory in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+  if accessory:IsA("Accessory") then
+    accessoryTweenn1 = game:GetService("TweenService"):Create(accessory.Handle, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Transparency = 1
+    })
+    accessoryTweenn1:Play()
+  end
+end
+                        end
+                    end
+               wait(0.1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -70)
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - fhitb.Position).magnitude
+        if distance <= 10 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid.RootPart.Velocity = Vector3.new(0, 110, 0)
+ humanoid:ChangeState("FallingDown")
+ humanoid:TakeDamage(30)
+end
+
+crater1 = Instance.new("Part", workspace)
+crater1.Transparency = 1
+crater1.CanCollide = false
+crater1.Position = fhitb.Position - Vector3.new(0, 3, 0)
+crater1.Size = Vector3.new(20, 1, 20)
+crater1.Anchored = true
+game.Debris:AddItem(crater1, 10)
+
+dec1 = Instance.new("Decal", crater1)
+dec1.Texture = "rbxassetid://10228065900"
+dec1.Face = Enum.NormalId.Top
+
+for i = 1, 5 do
+ rock = Instance.new("Part", workspace)
+ rock.Color = Color3.new(0.5, 0.5, 0.5)
+ rock.Material = "SmoothPlastic"
+ rock.Size = Vector3.new(1, 1, 1)
+ rock.Position = fhitb.Position + Vector3.new(math.random(-15, 15), 0, math.random(-15, 15))
+ rock.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * -100 + Vector3.new(0, 80, 0)
+ game.Debris:AddItem(rock, 15)
+end
+    wait(0.2)
+    
+hitbox = Instance.new("Part", workspace)
+hitbox.Size = Vector3.new(0, 0, 0)
+hitbox.CanCollide = false
+hitbox.Anchored = true
+hitbox.Shape = "Ball"
+hitbox.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+hitbox.Color = Color3.new(0.5, 0.5, 0.5)
+hitbox.Material = "Neon"
+game.Debris:AddItem(hitbox, 5)
+
+partTweenn3 = game:GetService("TweenService"):Create(hitbox, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(75, 75, 75),
+        Transparency = 1
+    })
+    partTweenn3:Play()
+    
+for i = 1, 5 do
+ rock = Instance.new("Part", workspace)
+ rock.Color = Color3.new(0.5, 0.5, 0.5)
+ rock.Material = "SmoothPlastic"
+ rock.Size = Vector3.new(1, 1, 1)
+ rock.Position = hitbox.Position + Vector3.new(math.random(-15, 15), 0, math.random(-15, 15))
+ rock.Velocity = Vector3.new(0, 100, 0)
+ game.Debris:AddItem(rock, 15)
+end
+
+crater2 = Instance.new("Part", workspace)
+crater2.Transparency = 1
+crater2.CanCollide = false
+crater2.Position = hitbox.Position - Vector3.new(0, 3, 0)
+crater2.Size = Vector3.new(20, 1, 20)
+crater2.Anchored = true
+game.Debris:AddItem(crater2, 10)
+
+dec2 = Instance.new("Decal", crater2)
+dec2.Texture = "rbxassetid://10228065900"
+dec2.Face = Enum.NormalId.Top
+
+    wait(0.1)
+    
+exf = Instance.new("Sound", hitbox)
+exf.SoundId = "rbxassetid://8200481527"
+exf.Volume = 1
+exf.PlaybackSpeed = 1
+exf.Looped = false
+exf:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - hitbox.Position).magnitude
+        if distance <= 45 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid.RootPart.Velocity = humanoid.RootPart.CFrame.LookVector * -250
+ humanoid:TakeDamage(humanoid.MaxHealth / 3)
+end
+
+ for _, part in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+    partTweenn2:Play()
+                        end
+                    end
+for _, accessory in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+  if accessory:IsA("Accessory") then
+    accessoryTweenn1 = game:GetService("TweenService"):Create(accessory.Handle, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+    accessoryTweenn1:Play()
+  end
+end
+end)
+
+Button2 = Instance.new("TextButton")
+Button2.Name = "Button"
+Button2.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button2.Position = UDim2.new(0.86, 0, 0.55, 0)
+Button2.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button2.TextScaled = true
+Button2.Text = "Range Slash"
+Button2.Parent = ScreenGui
+
+Button2.MouseButton1Click:Connect(function()
+    arc = game:GetObjects("rbxassetid://4527308516")[1]
+arc.Parent = workspace
+arc.Anchored = true
+arc.Size = Vector3.new(1, 1, 1)
+arc.Color = Color3.new(1, 1, 1)
+arc.Material = "Neon"
+arc.CanCollide = false
+arc.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
+
+fix = Instance.new("Part", workspace)
+fix.CFrame = arc.CFrame * CFrame.new(0, 0, -30)
+fix.Transparency = 1
+fix.Anchored = true
+fix.CanCollide = false
+fix.Size = Vector3.new(50, 3, 50)
+
+slash = Instance.new("Sound", game.Players.LocalPlayer.Character.HumanoidRootPart)
+slash.SoundId = "rbxassetid://4958427918"
+slash.Volume = 1
+slash.PlaybackSpeed = 1
+slash.Looped = false
+slash:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://54432537"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2.5)
+
+fix.Touched:Connect(function(hit)
+ humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character and humanoid.Health > 0 then
+ humanoid:ChangeState("Dead")
+ humanoid.Parent:BreakJoints()
+ humanoid:TakeDamage(math.huge)
+ 
+ hitS = Instance.new("Sound", humanoid.RootPart)
+ hitS.SoundId = "rbxassetid://7065398818"
+ hitS.Volume = 1
+ hitS.PlaybackSpeed = 1
+ hitS:Play()
+ 
+   for i = 1, 2 do
+        for _, part in pairs(humanoid.Parent:GetChildren()) do
+                        if part:IsA("BasePart") then
+                        part.Transparency = 1
+                            blood = Instance.new("Part", workspace)
+                            blood.Material = part.Material
+                            blood.Position = part.Position
+                            blood.Color = part.Color
+                            blood.Size = part.Size / 2
+                            blood.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 100
+                            game.Debris:AddItem(blood, 10)
+                        end
+                    end
+          end
+   end
+end)
+
+partTweenn3 = game:GetService("TweenService"):Create(arc, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(50, 3, 1),
+        CFrame = arc.CFrame * CFrame.new(0, 0, -30)
+    })
+    partTweenn3:Play()
+ partTweenn3.Completed:Connect(function()
+     game.Debris:AddItem(arc, 0)
+     game.Debris:AddItem(fix, 0)
+ end)
+ partTween3.Completed:Wait()
+end)
+
+Button3 = Instance.new("TextButton")
+Button3.Name = "Button"
+Button3.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button3.Position = UDim2.new(0.86, 0, 0.7, 0)
+Button3.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button3.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button3.TextScaled = true
+Button3.Text = "Serious Jumping Around"
+Button3.Parent = ScreenGui
+
+Button3.MouseButton1Click:Connect(function()
+ local Player = game.Players.LocalPlayer
+local Character = Player.Character
+local OriginalPosition = Character.HumanoidRootPart.Position
+
+  local TeleportRadius = 60
+  local NumTeleports = 35
+  
+  for _, accessory in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+  if accessory:IsA("Accessory") then
+    accessory.Handle.Transparency = 0.9
+  end
+end
+
+  for _, part in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+     if part:IsA("BasePart") then
+          part.Transparency = 1
+     end
+  end
+
+  for i = 1, NumTeleports do
+    local RandomX = math.random(-TeleportRadius, TeleportRadius)
+    local RandomZ = math.random(-TeleportRadius, TeleportRadius)
+    local TargetPosition = Vector3.new(OriginalPosition.X + RandomX, OriginalPosition.Y, OriginalPosition.Z + RandomZ)
+
+    Character.HumanoidRootPart.CFrame = CFrame.new(TargetPosition)
+    
+    crater = Instance.new("Part", workspace)
+    crater.Size = Vector3.new(30, 1, 30)
+    crater.Transparency = 1
+    crater.Position = TargetPosition - Vector3.new(0, 3, 0)
+    crater.CanCollide = false
+    crater.Anchored = true
+    game.Debris:AddItem(crater, 10)
+    
+    dec = Instance.new("Decal", crater)
+    dec.Texture = "rbxassetid://10228065900"
+    dec.Face = Enum.NormalId.Top
+    
+    gs = Instance.new("Sound", crater)
+    gs.SoundId = "rbxassetid://3923230963"
+    gs.Volume = 1
+    gs.PlaybackSpeed = 1
+    gs.Looped = false
+    gs:Play()
+    
+    local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - crater.Position).magnitude
+        if distance <= 20 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(50)
+  humanoid:ChangeState("FallingDown")
+  humanoid.RootPart.Velocity = Vector3.new(0, 150, 0)
+end
+
+    task.wait(0.01)
+  end
+
+  Character.HumanoidRootPart.CFrame = CFrame.new(OriginalPosition)
+  
+  for _, part in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.Transparency = 0
+                        end
+                    end
+  
+  for _, accessory in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+  if accessory:IsA("Accessory") then
+    accessory.Handle.Transparency = 0
+  end
+end
+end)
+
+sword.Equipped:Connect(function()
+ back.Transparency = 1
+ ses:Play()
+ ScreenGui.Enabled = true
+end)
+
+sword.Unequipped:Connect(function()
+ back.Transparency = 0
+ sues:Play()
+ ScreenGui.Enabled = false
+end)
+
+sword.Activated:Connect(function()
+  random1 = math.random(1, 2)
+  sas:Play()
+   if random1 == 1 then
+ slash1a:Play()
+ slash1a:AdjustSpeed(2.5)
+   else
+ slash2a:Play()
+ slash2a:AdjustSpeed(2.5)
+   end
+end)
