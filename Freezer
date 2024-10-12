@@ -23,7 +23,7 @@ local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimatio
 k:Play()
 k:AdjustSpeed(7)
 
-sound = Instance.new("Sound", tool.Handle)
+sound = Instance.new("Sound", handle)
 sound.SoundId = "rbxassetid://1146690363"
 sound.Volume = 2
 sound.PlaybackSpeed = 1
