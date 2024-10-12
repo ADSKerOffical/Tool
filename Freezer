@@ -1,0 +1,114 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Freezer"
+tool.ToolTip = "Shoots projectiles that freeze entities"
+tool.Grip = CFrame.Angles(0, math.rad(20), 0)
+tool.GripPos = Vector3.new(0, -0.5, 1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://183537459"
+mesh.TextureId = "rbxassetid://183537477"
+mesh.Scale = Vector3.new(0.75, 0.75, 0.75)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 5 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://182634467"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(7)
+
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://1146690363"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0, 0, 1)
+ball.Shape = "Ball"
+ball.Material = "Neon"
+ball.Size = Vector3.new(1.5, 1.5, 1.5)
+ball.CanCollide = false
+ball.Position = handle.Position
+game.Debris:AddItem(ball, 8)
+
+fire = Instance.new("Fire", ball)
+fire.Size = 3
+fire.Heat = 20
+fire.Color = Color3.new(0, 0, 1)
+fire.SecondaryColor = Color3.new(0, 0, 1)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 350
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+ball:Destroy()
+humanoid:TakeDamage(25)
+coroutine.wrap(function()
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Anchored = true
+        end
+    end
+  task.wait(3)
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Anchored = false
+            part.AssemblyLinearVelocity = Vector3.zero
+        end
+    end
+end)()
+  ice = Instance.new("Part", humanoid.RootPart)
+  ice.Size = Vector3.new(2, 2, 2)
+  ice.CFrame = humanoid.RootPart.CFrame * CFrame.Angles(math.rad(-90), 0, 0)
+  ice.CanCollide = false
+  ice.Anchored = true
+  ice.Transparency = 0.1
+  
+  m = Instance.new("SpecialMesh", ice)
+  m.MeshId = "rbxassetid://66876751"
+  m.TextureId = "rbxassetid://66876766"
+  m.Scale = Vector3.zero
+  
+  partTweenn2 = game:GetService("TweenService"):Create(m, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {
+        Scale = Vector3.new(1.2, 1.2, 1.2)
+    })
+    partTweenn2:Play()
+  
+  game.Debris:AddItem(ice, 3)
+  end
+ end)
+            end
+end)
+
+tool.Equipped:Connect(function()
+  local Anim = Instance.new("Animation")
+  Anim.AnimationId = "rbxassetid://182631367"
+  Anim.Name = "HoldAnim"
+  local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+  k:Play()
+  k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+  local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "HoldAnim" then
+        animation:Stop()
+    end
+end
+end)
