@@ -1,0 +1,44 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Cloning Technique"
+tool.RequiresHandle = false
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://54456096"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(3)
+ task.wait(0.2)
+game.Players.LocalPlayer.Character.Archivable = true
+game.Players.LocalPlayer.Character.Humanoid.Archivable = true
+clone = game.Players.LocalPlayer.Character:Clone()
+hum = game.Players.LocalPlayer.Character.Humanoid:Clone()
+clone.Parent = workspace
+hum.Parent = clone
+
+sound = Instance.new("Sound", hum)
+sound.SoundId = "rbxassetid://147722165"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", tool.Parent.HumanoidRootPart)
+sound.SoundId = "rbxassetid://6892830182"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(clone, 100)
+
+hum.Health = game.Players.LocalPlayer.Character.Humanoid.Health
+hum.MaxHealth = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
+pcall(function()
+hum.RootPart.CFrame = tool.Parent.HumanoidRootPart.CFrame * CFrame.new(0, 0, -2)
+end)
+            end
+end)
