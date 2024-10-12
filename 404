@@ -1,0 +1,43 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "404"
+tool.ToolTip = "Broken tool, needed to clone a character"
+tool.RequiresHandle = false
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://54456096"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(3)
+ task.wait(0.2)
+game.Players.LocalPlayer.Character.Humanoid.Archivable = true
+clone = game.Players.LocalPlayer.Character.Humanoid:Clone()
+clone.Parent = workspace
+game.Debris:AddItem(clone, 100)
+
+clone.Health = game.Players.LocalPlayer.Character.Humanoid.Health
+clone.MaxHealth = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
+
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://3359047385"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Players.LocalPlayer:ClearCharacterAppearance()
+for _, part in ipairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if part:IsA("SpecialMesh") then
+            part:Destroy()
+        elseif part:IsA("BasePart") then
+            part.Color = Color3.new(0, 0, 0)
+        end
+    end
+game.Players.LocalPlayer.Character["Right Leg"].Color = Color3.new(1, 1, 1)
+game.Players.LocalPlayer.Character.Animator:Destroy()
+game.Players.LocalPlayer.Character.Animate:Destroy()
+            end
+end)
