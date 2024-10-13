@@ -37,7 +37,6 @@ for _, part in ipairs(game.Players.LocalPlayer.Character:GetDescendants()) do
         end
     end
 game.Players.LocalPlayer.Character["Right Leg"].Color = Color3.new(1, 1, 1)
-game.Players.LocalPlayer.Character.Animator:Destroy()
 game.Players.LocalPlayer.Character.Animate:Destroy()
             end
 end)
