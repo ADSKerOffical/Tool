@@ -1,0 +1,65 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Admin Weapon | Glove"
+tool.Grip = CFrame.Angles(math.rad(-90), math.rad(0), math.rad(90))
+tool.GripPos = Vector3.new(0, 1, -0.3)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+glove = Instance.new("SpecialMesh", handle)
+glove.MeshId = "rbxassetid://243183921"
+glove.TextureId = "rbxassetid://178147795"
+glove.Scale = Vector3.new(2, 2, 2)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1.5 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://186934658"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://6776044661"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - tool.Handle.Position).magnitude
+        if distance <= 15 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ local recoilDirection = (tool:FindFirstChild("Handle").Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -500
+ humanoid.BreakJointsOnDeath = false
+ humanoid:ChangeState("Dead")
+ humanoid:TakeDamage(math.huge)
+ 
+ sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://1837829564"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://96626016"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+            end
+end)
