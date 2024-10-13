@@ -1,0 +1,158 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Vita Glove"
+tool.ToolTip = "I don't know where you got this devastating weapon from"
+tool.Grip = CFrame.Angles(math.rad(-90), math.rad(0), math.rad(90))
+tool.GripPos = Vector3.new(0, 1, -0.3)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+glove = Instance.new("SpecialMesh", handle)
+glove.MeshId = "rbxassetid://243183921"
+glove.TextureId = "rbxassetid://13083001520"
+glove.Scale = Vector3.new(2, 2, 2)
+
+tool.Activated:Connect(function()
+ coco = Instance.new("MeshPart", workspace)
+ coco.MeshId = "rbxassetid://13083001675"
+ coco.TextureID = "rbxassetid://13083001520"
+ coco.CFrame = handle.CFrame * CFrame.new(0, -2, 0)
+ coco.Size = Vector3.new(3, 3, 3)
+ coco.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 300
+ 
+ coco.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+  if humanoid.Parent:FindFirstChildOfClass("ForceField") then
+ humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+  end
+  humanoid.Parent:BreakJoints()
+  humanoid:ChangeState("Dead")
+  humanoid:TakeDamage(math.huge)
+  humanoid.Health = 0
+  humanoid.MaxHealth = 0
+  
+sound = Instance.new("Sound", coco)
+sound.SoundId = "rbxassetid://7214256592"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://1064776866"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+       elseif humanoid and humanoid.Parent == game.Players.LocalPlayer.Character then
+   game.Players.LocalPlayer.Character.Humanoid.Health = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
+   
+sound = Instance.new("Sound", game.Players.LocalPlayer.Character.HumanoidRootPart)
+sound.SoundId = "rbxassetid://1655262564"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    end
+ end)
+ 
+ game.Debris:AddItem(coco, 10)
+ 
+sound = Instance.new("Sound", coco)
+sound.SoundId = "rbxassetid://457046954"
+sound.Volume = 2
+sound.PlaybackSpeed = 1.1
+sound.Looped = false
+sound.TimePosition = 0.3
+sound:Play()
+end)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.Enabled = false
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Rejecting Suit"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 75 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+coroutine.wrap(function()
+ suit = Instance.new("Part", humanoid.RootPart)
+ suit.CanCollide = false
+ suit.Anchored = false
+ 
+ shp = Instance.new("SpecialMesh", suit)
+ shp.MeshId = "rbxassetid://13083001675"
+ shp.TextureId = "rbxassetid://13083001520"
+ shp.Scale = Vector3.new(1, 1, 1)
+ game.Debris:AddItem(suit, 6)
+ 
+ suitjoin = Instance.new("Weld", suit)
+ suitjoin.Part0 = suit
+ suitjoin.Part1 = humanoid.RootPart
+ suitjoin.C0 = CFrame.new(0, 0, 0)
+ humanoid.PlatformStand = true
+ 
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://5853668794"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  task.wait(6)
+sound = Instance.new("Sound", humanoid.Parent.PrimaryPart)
+sound.SoundId = "rbxassetid://9114788214"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+humanoid.Parent:BreakJoints()
+humanoid:TakeDamage(math.huge)
+humanoid.Parent.Head.Velocity = Vector3.new(0, 150, 0)
+humanoid.Parent["Left Arm"].Velocity = Vector3.new(150, 0, 0)
+humanoid.Parent["Right Arm"].Velocity = Vector3.new(-150, 0, 0)
+ end)()
+end
+end)
+
+tool.Equipped:Connect(function()
+ ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+ ScreenGui.Enabled = false
+end)
+
+spawn(function()
+ repeat wait() until tool.Parent == game.Players.LocalPlayer.Character
+Spooky = Instance.new("Sound", game.Workspace)
+Spooky.Name = "MEGA COCONUT"
+Spooky.SoundId = "rbxassetid://4485011313"
+Spooky.Volume = 1
+Spooky.PlaybackSpeed = 1
+Spooky.Looped = false
+Spooky:Play()
+ ff = Instance.new("ForceField", game.Players.LocalPlayer.Character)
+  game.Players.LocalPlayer.Character.Humanoid.HealthChanged:Connect(function()
+ game.Players.LocalPlayer.Character.Humanoid.Health = math.huge
+ game.Players.LocalPlayer.Character.Humanoid.MaxHealth = math.huge
+  end)
+end)
