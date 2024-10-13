@@ -1,0 +1,59 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Breaking SD-24"
+tool.ToolTip = "There should be a minigun pistol but something went wrong"
+tool.GripPos = Vector3.new(0, 0, 1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+guni = Instance.new("SpecialMesh", handle)
+guni.Scale = Vector3.new(1.5, 1.5, 1.5)
+guni.MeshId = "rbxassetid://98400644"
+guni.TextureId = "rbxassetid://98400574"
+
+local isFiring = false
+local cd = 1
+
+mouse.Button1Down:connect(function()
+  if tool.Parent == game.Players.LocalPlayer.Character then
+    isFiring = true
+    while isFiring do
+      spawnBall()
+      wait(1 - cd)
+     cd += 0.05
+       if cd > 0.9 then
+     cd = 0.9
+       end
+    end
+  end
+end)
+
+mouse.Button1Up:connect(function()
+  isFiring = false
+  cd = 0
+end)
+
+function spawnBall()
+  local ball = Instance.new("Part", workspace)
+  ball.Color = Color3.new(0, 0.75, 0)
+  ball.Shape = "Ball"
+  ball.Material = "Neon"
+  ball.Size = Vector3.new(1.5, 1.5, 1.5)
+  ball.CanCollide = false
+  ball.Position = handle.Position
+  game.Debris:AddItem(ball, 8)
+
+  local bodyVelocity = Instance.new("BodyVelocity", ball)
+  bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+  bodyVelocity.Velocity = (mouse.Hit.Position - ball.Position).Unit * 350
+  ball.CFrame = CFrame.new(ball.Position, mouse.Hit.Position)
+
+  ball.Touched:Connect(function(hit)
+    local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+      humanoid:TakeDamage(5)
+    end
+  end)
+end
