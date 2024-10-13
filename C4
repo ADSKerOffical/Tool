@@ -47,7 +47,6 @@ sound:Play()
     explosion.Position = bomb.Position
     explosion.BlastRadius = 40
     explosion.BlastPressure = 100
-    explosion.DestroyJointRadiusPercent = 0
     explosion.ExplosionType = Enum.ExplosionType.Craters
     explosion.TimeScale = 0.3
 end)
