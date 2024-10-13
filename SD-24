@@ -52,8 +52,7 @@ sound:Play()
   local bodyVelocity = Instance.new("BodyVelocity", ball)
   bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
   bodyVelocity.Velocity = (mouse.Hit.Position - ball.Position).Unit * (350 - speedunbuff)
-  ball.CFrame = CFrame.new(ball.Position, mouse.Hit.Position)
-
+  
   ball.Touched:Connect(function(hit)
     local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
     if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
