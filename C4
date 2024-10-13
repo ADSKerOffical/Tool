@@ -1,0 +1,53 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "C4"
+tool.ToolTip = "Blow up houses and buildings with this tool"
+tool.GripPos = Vector3.new(0, 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+c4 = Instance.new("SpecialMesh", handle)
+c4.Scale = Vector3.new(2, 2, 2)
+c4.MeshId = "rbxassetid://104516854"
+c4.TextureId = "rbxassetid://104516981"
+
+tool.Activated:Connect(function()
+  bomb = handle:Clone()
+  bomb.CanCollide = true
+  bomb.CanTouch = true
+  bomb.Locked = true
+  bomb.Parent = workspace
+  tool:Destroy()
+    for i = 1, 5 do
+  wait(1)
+sound = Instance.new("Sound", bomb)
+sound.SoundId = "rbxassetid://5536265548"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    end
+    
+    shok = Instance.new("Part", workspace)
+    shok.Position = bomb.Position
+    shok.Anchored = true
+    shok.CanCollide = false
+    shok.Transparency = 1
+    game.Debris:AddItem(shok, 3.5)
+    
+    sound = Instance.new("Sound", shok)
+    sound.SoundId = "rbxassetid://7818612635"
+    sound.Volume = 2
+    sound.PlaybackSpeed = 1
+    sound.Looped = false
+    sound:Play()
+    bomb:Destroy()
+    
+    explosion = Instance.new("Explosion", workspace)
+    explosion.Position = bomb.Position
+    explosion.BlastRadius = 40
+    explosion.BlastPressure = 100
+    explosion.DestroyJointRadiusPercent = 0
+    explosion.ExplosionType = Enum.ExplosionType.Craters
+    explosion.TimeScale = 0.3
+end)
