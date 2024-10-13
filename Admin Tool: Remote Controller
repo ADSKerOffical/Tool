@@ -1,0 +1,177 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Remote Control"
+tool.ToolTip = "This tool is only available to the administrators"
+tool.Archivable = false 
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+phone = Instance.new("SpecialMesh", handle)
+phone.MeshId = "rbxassetid://87653956"
+phone.TextureId = "rbxassetid://87653762"
+phone.Scale = Vector3.new(1, 1, 1)
+
+local mode = 1
+
+function deletemode()
+local mousePos = game.Players.LocalPlayer:GetMouse()
+    if mousePos then
+        mousePos.Target:Destroy()
+    end
+end
+
+function copymode()
+local mousePos = game.Players.LocalPlayer:GetMouse()
+    if mousePos and mousePos.Target:IsA("Part") or mousePos.Target:IsA("MeshPart") then
+   part = mousePos.Target:Clone()
+        part.Archivable = true
+        part.Anchored = mousePos.Target.Anchored
+        part.Color = mousePos.Target.Color
+        part.Parent = workspace
+        part.CFrame = mousePos.Target.CFrame
+        part.Size = mousePos.Target.Size
+        part.Material = mousePos.Target.Material
+        part.Shape = mousePos.Target.Shape
+        part.AssemblyAngularVelocity = Vector3.zero
+    end
+end
+
+function grabmode()
+local mousePos = game.Players.LocalPlayer:GetMouse()
+    if mousePos then
+pcall(function()
+        mousePos.Target.CFrame = handle.CFrame * CFrame.new(0, 0, -2)
+end)
+    end
+end
+
+function increasemode()
+local mousePos = game.Players.LocalPlayer:GetMouse()
+    if mousePos.Target then
+        mousePos.Target.Size = mousePos.Target.Size * 2
+    end
+end
+
+function decreasemode()
+local mousePos = game.Players.LocalPlayer:GetMouse()
+    if mousePos.Target then
+        mousePos.Target.Size = mousePos.Target.Size / 2
+    end
+end
+
+function turnovermode()
+local mousePos = game.Players.LocalPlayer:GetMouse()
+    if mousePos then
+        mousePos.Target.Rotation = Vector3.new(mousePos.Target.Rotation.X, mousePos.Target.Rotation.Y + 180, mousePos.Target.Rotation.Z)
+    end
+end
+
+local fftr = false
+function local_forcefield()
+fftr = not fftr
+ff = Instance.new("ForceField", game.Players.LocalPlayer.Character)
+ if fftr then
+ff:Destroy()
+ end
+end
+
+tool.Activated:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://49456429"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxasset://sounds/electronicpingshort.wav"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ if mode == 1 then
+deletemode()
+  elseif mode == 2 then
+copymode()
+  elseif mode == 3 then
+grabmode()
+  elseif mode == 4 then
+increasemode()
+  elseif mode == 5 then
+decreasemode()
+  elseif mode == 6 then
+turnovermode()
+  elseif mode == 7 then
+local_forcefield()
+ end
+end)
+
+game.Players.LocalPlayer.Chatted:Connect(function(msg)
+ if msg:lower() == ".mode 1" then
+mode = 1
+  elseif msg:lower() == ".mode 2" then
+mode = 2
+  elseif msg:lower() == ".mode 3" then
+mode = 3
+  elseif msg:lower() == ".mode 4" then
+mode = 4
+  elseif msg:lower() == ".mode 5" then
+mode = 5
+  elseif msg:lower() == ".mode 6" then
+mode = 6
+  elseif msg:lower() == ".mode 7" then
+mode = 7
+ end
+end)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.ResetOnSpawn = true
+ScreenGui.Enabled = false
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Reset World"
+Button.Parent = ScreenGui
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://17685142849"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+for _, part in ipairs(workspace:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Transparency = 1
+partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+partTweenn2:Play()
+       elseif part.ClassName == "Player" and part.Name ~= game.Players.LocalPlayer.Name then
+ part:LoadCharacter()
+       elseif part:IsA("Decal") then
+ part.Transparency = 1
+  partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+    partTweenn2:Play()
+        end
+    end
+            end
+end)
+
+tool.Equipped:Connect(function()
+ ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+ ScreenGui.Enabled = false
+end)
