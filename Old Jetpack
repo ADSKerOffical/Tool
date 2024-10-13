@@ -1,0 +1,36 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Old Jetpack"
+tool.ToolTip = "It works terribly, but it still works"
+tool.GripPos = Vector3.new(1.5, 0, -3)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+jp = Instance.new("SpecialMesh", handle)
+jp.Scale = Vector3.new(2, 2, 2)
+jp.MeshId = "rbxassetid://156292119"
+jp.TextureId = "rbxassetid://156292147"
+
+mouse.Button1Down:connect(function()
+ if tool.Parent == game.Players.LocalPlayer.Character then
+    bodyVelocity = Instance.new("BodyVelocity")
+	bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+	bodyVelocity.Name = "OldJetpackVelocity"
+	bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)
+	bodyVelocity.P = math.huge
+	bodyVelocity.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+		local direction = mouse.Hit.Position
+		bodyVelocity.Velocity = direction * 500
+ end
+end)
+
+mouse.Button1Up:Connect(function()
+ if tool.Parent ~= game.Players.LocalPlayer.Character or tool.Parent == game.Players.LocalPlayer.Character then
+local bd = game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity")
+  if bd and bd.Name == "OldJetpackVelocity" then
+bd:Destroy()
+  end
+ end
+end)
