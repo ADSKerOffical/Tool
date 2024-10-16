@@ -1,0 +1,73 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Uranus"
+tool.ToolTip = "A highly radioactive chemical element, spread this radiation of your enemies"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mes = Instance.new("SpecialMesh", handle)
+mes.MeshId = "rbxassetid://153993888"
+mes.TextureId = "rbxassetid://153993976"
+mes.Scale = Vector3.new(1.5, 1.5, 1.5)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 15 then
+                lastPressTime = currentTime 
+bottle = handle:Clone()
+bottle.Parent = workspace
+bottle.CanCollide = true
+game.Debris:AddItem(bottle, 14)
+local canspread = true
+
+smoke = Instance.new("Smoke", bottle)
+smoke.Color = Color3.new(0, 1, 0)
+smoke.Opacity = 0.2
+smoke.RiseVelocity = 10
+smoke.Size = 1.5
+
+sound = Instance.new("Sound", bottle)
+sound.SoundId = "rbxassetid://4962360929"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+loop = Instance.new("Sound", bottle)
+loop.SoundId = "rbxassetid://251407575"
+loop.Volume = 0.6
+loop.PlaybackSpeed = 1
+loop.Looped = true
+loop:Play()
+
+task.delay(8, function()
+ canspread = false
+ smoke.Enabled = false
+ partTweenn2 = game:GetService("TweenService"):Create(loop, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Volume = 0
+    })
+    partTweenn2:Play()
+end)
+
+spawn(function()
+ repeat wait(0.3)
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - bottle.Position).magnitude
+        if distance <= 60 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(1)
+ humanoid.RootPart.AssemblyLinearVelocity = Vector3.zero
+end
+ until bottle.Parent == nil or canspread == false
+end)
+            end
+end)
