@@ -1,0 +1,24 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Gold Shield"
+tool.ToolTip = "Some kind of royal shield that regenerates the player"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mes = Instance.new("SpecialMesh", handle)
+mes.MeshId = "rbxassetid://416669201"
+mes.TextureId = "rbxassetid://416669357"
+mes.Scale = Vector3.new(1, 1.5, 1)
+local canRegen = true
+
+tool.Equipped:Connect(function()
+canRegen = true
+ repeat task.wait(0.025)
+  if game.Players.LocalPlayer.Character.Humanoid.Health == game.Players.LocalPlayer.Character.Humanoid.MaxHealth then return end
+game.Players.LocalPlayer.Character.Humanoid.Health += 0.4
+ until tool.Parent == game.Players.LocalPlayer.Backpack or canRegen == false
+end)
+
+tool.Unequipped:Connect(function()
+  canRegen = false
+end)
