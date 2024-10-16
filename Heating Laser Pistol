@@ -1,0 +1,69 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Heating Laser Pistol"
+tool.ToolTip = "Laser Pistol: Sets everything alive in its path on fire. Heats up pretty quickly"
+tool.GripPos = Vector3.new(0, -0.4, 0.6)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+pis = Instance.new("SpecialMesh", handle)
+pis.MeshId = "rbxassetid://334653903"
+pis.TextureId = "rbxassetid://334653784"
+pis.Scale = Vector3.new(1.5, 1.5, 1.5)
+
+local firerate = 0
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= tonumber(firerate) then
+                lastPressTime = currentTime 
+  firerate += 0.15
+   if firerate > 2 then
+ firerate = 2
+   end
+ expl = Instance.new("MeshPart", workspace)
+ expl.MeshId = "rbxassetid://1185246"
+ expl.Color = Color3.new(1, 1, 1)
+ expl.Size = Vector3.new(4, 8, 0.5)
+ expl.Anchored = false
+ expl.Position = handle.Position
+ expl.CanCollide = false
+ game.Debris:AddItem(expl, 4)
+ 
+ expl.Touched:Connect(function(hit)
+humanoud = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoud and humanoud.Parent ~= game.Players.LocalPlayer.Character then
+  humanoud:TakeDamage(1.5)
+  humanoud.RootPart.AssemblyLinearVelocity = Vector3.zero
+   end
+ end)
+ 
+ spawn(function()
+while tool.Parent ~= nil and firerate > 0 and wait(1) do
+firerate = firerate - 0.025
+end
+ end)
+ 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://8561500387"
+sound.Volume = 1
+sound.PlaybackSpeed = 1 - math.random(0, 2) / 10
+sound.Looped = false
+sound:Play()
+
+partTweenn2 = game:GetService("TweenService"):Create(expl, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Color = Color3.new(0, 0, 0),
+        Size = expl.Size * 2
+    })
+    partTweenn2:Play()
+ 
+ Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+expl.CFrame = CFrame.new(expl.Position, mousehit)
+
+bodyVelocity = Instance.new("BodyVelocity", expl)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - expl.Position).Unit * 250
+            end
+end)
