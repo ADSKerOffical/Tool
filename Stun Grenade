@@ -1,0 +1,77 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Stun Grenade"
+tool.ToolTip = "Stuns enemies"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Size = Vector3.new(1, 1, 1)
+
+gren = Instance.new("SpecialMesh", handle)
+gren.MeshId = "rbxassetid://47679879"
+gren.TextureId = "rbxassetid://3135559918"
+gren.Scale = Vector3.new(1.5, 1.5, 1.5)
+gren.VertexColor = Vector3.new(0.5, 0.5, 0.5)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://5699659105"
+sound.Volume = 1
+sound.TimePosition = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+grenade = handle:Clone()
+grenade.Parent = workspace
+grenade.CanCollide = true
+grenade.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
+grenade.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 100
+game.Debris:AddItem(grenade, 4.5)
+    task.wait(3)
+ grenade.Transparency = 1
+ grenade.CanCollide = false
+ grenade.Size = grenade.Size * 2
+ grenade.Anchored = true
+sound = Instance.new("Sound", grenade)
+sound.SoundId = "rbxassetid://5246245227"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  
+  explo = Instance.new("Part", grenade)
+  explo.Size = Vector3.zero
+  explo.CanCollide = false
+  explo.Color = Color3.new(1, 1, 1)
+  explo.Position = grenade.Position
+  explo.Material = "Neon"
+  explo.Shape = "Ball"
+  
+  thi = Instance.new("Sound")
+  thi.Name = "Tinnitus"
+  thi.SoundId = "rbxassetid://9069161602"
+  thi.PlaybackSpeed = 1
+  thi.Volume = 0.3
+  
+  explo.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+      if humanoid then
+  humanoid:ChangeState("FallingDown")
+thi.Parent = humanoid.Parent.PrimaryPart
+thi:Play()
+      end
+  end)
+  
+  partTweenn2 = game:GetService("TweenService"):Create(explo, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Size = Vector3.new(50, 50, 50),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+         end
+end)
