@@ -6,10 +6,10 @@ tool.GripPos = Vector3.new(0, -0.4, 0.6)
 handle = Instance.new("Part", tool)
 handle.Name = "Handle"
 
-pis = Instance.new("SpecialMesh", handle)
-pis.MeshId = "rbxassetid://334653903"
-pis.TextureId = "rbxassetid://334653784"
-pis.Scale = Vector3.new(1.5, 1.5, 1.5)
+pist = Instance.new("SpecialMesh", handle)
+pist.MeshId = "rbxassetid://334653903"
+pist.TextureId = "rbxassetid://334653784"
+pist.Scale = Vector3.new(1.5, 1.5, 1.5)
 
 local firerate = 0
 local lastPressTime = 0
