@@ -1,0 +1,26 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Jump Boots"
+tool.ToolTip = "Jump high with these boots"
+tool.GripPos = Vector3.new(1.5, 2.7, -1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+jumpboots = Instance.new("SpecialMesh", handle)
+jumpboots.MeshId = "rbxassetid://181202048"
+jumpboots.TextureId = "rbxassetid://181202117"
+jumpboots.Scale = Vector3.new(1, 1, 1)
+
+game.Players.LocalPlayer.Character.Humanoid.Jumping:Connect(function()
+ if tool.Parent == game.Players.LocalPlayer.Character then
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://6678636911"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+else
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+ end
+end)
