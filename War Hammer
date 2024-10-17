@@ -1,0 +1,194 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "War Hammer"
+tool.ToolTip = "A heavy hammer in which the blood of the strongest warriors was spilled"
+tool.GripPos = Vector3.new(0, -2, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+ham = Instance.new("SpecialMesh", handle)
+ham.MeshId = "rbxassetid://745770497"
+ham.TextureId = "rbxassetid://745770140"
+ham.Scale = Vector3.new(1, 1, 1)
+
+local dam = 30
+local knock = 150
+local vamp = 30
+local damrang = 13
+local craterS = 20
+local cd = 2
+local swingsp = 2.5
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.ResetOnSpawn = true
+ScreenGui.Enabled = false
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Super Strike"
+Button.Parent = ScreenGui
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+ local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://184574340"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+ task.wait(1.2)
+ball = Instance.new("Part", workspace)
+ball.CanCollide = false
+ball.Color = Color3.new(1, 1, 1)
+ball.Position = handle.Position
+ball.Size = Vector3.zero
+ball.Material = "Neon"
+ball.Shape = "Ball"
+ball.Anchored = true
+game.Debris:AddItem(ball, 10)
+
+task.delay(0.3, function()
+sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://165969964"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
+
+partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Color = Color3.new(0, 0, 0),
+        Size = Vector3.new(100, 100, 100)
+    })
+    partTweenn2:Play()
+    
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 75 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(90)
+  humanoid:ChangeState("FallingDown")
+  local recoilDirection = (handle.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -150
+end
+            end
+end)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://96065457"
+Anim.Name = "WarHammer_IdleAnimation"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://96065457" or track.Animation.Name == "WarHammer_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= cd then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://74897796"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(swingsp)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "http://www.roblox.com/asset/?id=10730819"
+sound.Volume = 4
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    task.wait(0.15)
+if tool.Parent.Humanoid:GetState() ~= Enum.HumanoidStateType.Freefall then
+crater1 = Instance.new("Part", workspace)
+crater1.Transparency = 1
+crater1.CanCollide = false
+crater1.Position = tool.Parent.Humanoid.RootPart.Position - Vector3.new(0, 3, 0)
+crater1.Size = Vector3.new(craterS, 1, craterS)
+crater1.Anchored = true
+game.Debris:AddItem(crater1, 20)
+
+dec1 = Instance.new("Decal", crater1)
+dec1.Texture = "rbxassetid://10228065900"
+dec1.Transparency = 0.1
+dec1.Face = Enum.NormalId.Top
+end
+  local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - Usuario.Character.HumanoidRootPart.Position).magnitude
+        if distance <= damrang then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(dama)
+  local recoilDirection = (handle.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -knock
+  if Usuario.Character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall or Usuario.Character.Humanoid:GetState() == Enum.HumanoidStateType.Jumping then
+humanoid:TakeDamage(dama / 3)
+  end
+   if humanoid:GetState() == Enum.HumanoidStateType.Dead then
+ tool.Parent.Humanoid.Health += vamp / 6
+ tool.Parent.Humanoid.MaxHealth += vamp
+   end
+end
+        end
+  end)
+  
+while tool.Parent ~= nil and game.Players.LocalPlayer.Character.Humanoid:GetState() ~= Enum.HumanoidStateType.Dead and task.wait(0.1) do
+pcall(function()
+ if game.Players.LocalPlayer.Character.Humanoid.Health < game.Players.LocalPlayer.Character.Humanoid.MaxHealth / 2 and tool.Parent == game.Players.LocalPlayer.Character then
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 30
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 80
+dama = 60
+knock = 225
+vamp = 60
+craterS = 35
+cd = 0.75
+swingsp = 4
+ham.VertexColor = Vector3.new(1, 0, 0)
+ScreenGui.Enabled = true
+else
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+dama = 30
+knock = 150
+vamp = 30
+cd = 2
+swingsp = 2.5
+craterS = 20
+ham.VertexColor = Vector3.new(1, 1, 1)
+ScreenGui.Enabled = false
+ end
+end)
+end
