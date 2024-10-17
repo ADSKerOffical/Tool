@@ -1,0 +1,132 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Sledgehammer of Soul"
+tool.ToolTip = ""
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(95), 0)
+tool.GripPos = Vector3.new(0, 0, -2)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local dambu = 0
+local maxhe = 0
+
+ham = Instance.new("SpecialMesh", handle)
+ham.MeshId = "rbxassetid://15924243"
+ham.TextureId = "rbxassetid://15924246"
+ham.Scale = Vector3.new(2, 2, 2)
+ham.VertexColor = Vector3.new(1, 0.1, 0)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://96065457"
+Anim.Name = "SlegdehammerSoul_IdleAnimation"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://96065457" or track.Animation.Name == "SledgehammerSoul_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
+
+spawn(function()
+while wait() do
+ if game.Players.LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Jumping and tool.Parent == game.Players.LocalPlayer.Character then
+ball = Instance.new("Part", workspace)
+ball.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, -2, 0)
+ball.Anchored = true
+ball.CanCollide = false
+ball.Color = Color3.new(1, 0, 0)
+ball.Material = "CrackedLava"
+ball.Shape = "Ball"
+game.Debris:AddItem(ball, 5)
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 100, 0)
+
+partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Size = Vector3.new(25, 25, 25),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - ball.Position).magnitude
+        if distance <= 17 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(5 + dambu / 3)
+ local recoilDirection = (ball.Position - humanoid.RootPart.Position).Unit
+ humanoid:ChangeState("FallingDown")
+ humanoid.RootPart.Velocity += recoilDirection * 75
+end
+   end
+end
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://96071496"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1.5)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://28144425"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+  task.wait(0.25)
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 12 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(25 + humanoid.Health / 50 + dambu)
+  Usuario.Character.Humanoid.Health += 2
+  Usuario.Character.Humanoid:TakeDamage(Usuario.Character.Humanoid.MaxHealth / 100)
+ local random = math.random(1, 5)
+if random == 1 then
+ maxhe += 10
+ Usuario.Character.Humanoid.MaxHealth += 4
+end
+    if humanoid.Health <= 0 and humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
+ Usuario.Character.Humanoid.MaxHealth = humanoid.MaxHealth + maxhe
+ Usuario.Character.Humanoid.Health += 25
+if dambu < 200 then
+ dambu += 5
+ end
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://429400881"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    end
+end
+            end
+end)
