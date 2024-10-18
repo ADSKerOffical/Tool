@@ -213,6 +213,7 @@ tool.Activated:Connect(function()
 sho = handle:Clone()
 sho.Parent = workspace
 sho.CanCollide = false
+sho.CanTouch = true
 sho.Anchored = false
 game.Debris:AddItem(sho, 10)
 
