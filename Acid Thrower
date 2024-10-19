@@ -1,0 +1,143 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Acid Thrower"
+tool.ToolTip = ""
+tool.Grip = CFrame.Angles(math.rad(0), 0, math.rad(0))
+tool.GripPos = Vector3.new(0, -0.4, 0.8)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mee = Instance.new("SpecialMesh", handle)
+mee.Scale = Vector3.new(1.5, 1.5, 1.5)
+mee.MeshId = "rbxassetid://181346014"
+mee.TextureId = "rbxassetid://181346066"
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://11945246"
+sound.Volume = 1
+sound.PlaybackSpeed = 0.5
+sound.Looped = false
+sound:Play()
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0, 0.9, 0)
+ball.Size = Vector3.new(1.5, 1.5, 1.5)
+ball.CanCollide = true
+ball.Position = handle.Position
+ball.Material = "SmoothPlastic"
+ball.Shape = "Ball"
+game.Debris:AddItem(ball, 10)
+
+local Mouse = game.Players.LocalPlayer:GetMouse()
+local mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 350
+ball.CFrame = CFrame.new(ball.Position, mousehit)
+
+ball.Touched:Connect(function(part)
+ if part:IsA("Part") and part ~= handle and part.Parent ~= game.Players.LocalPlayer.Character then
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart then
+        local distance = (v.RootPart.Position - ball.Position).magnitude
+        if distance <= 6 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+humanoid:TakeDamage(15)
+humanoid.RootPart.Velocity = ball.CFrame.LookVector * 100
+end
+
+puddle = Instance.new("Part", workspace)
+puddle.Position = ball.Position
+puddle.Anchored = true
+puddle.Material = "SmoothPlastic"
+puddle.Size = Vector3.zero
+puddle.Color = Color3.new(0, 0.9, 0)
+puddle.CanCollide = false
+game.Debris:AddItem(puddle, 5)
+ball:Destroy()
+
+puddle.Touched:Connect(function(hit)
+ humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Health > 0 and humanoid:GetState() ~= "Dead" then
+humanoid:TakeDamage(0.75)
+      if humanoid.Health <= 0 then
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+        if part:IsA("SpecialMesh") then
+            part:Destroy()
+         elseif part:IsA("BasePart") then
+            part.Color = Color3.new(0, 1, 0)
+            limb = part:Clone()
+            limb.Parent = workspace
+            part.Transparency = 1
+            game.Debris:AddItem(limb, 30)
+        end
+    end
+      end
+  end
+end)
+
+partTweenn2 = game:GetService("TweenService"):Create(puddle, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(math.random(10, 40), 0.2, math.random(10, 40))
+    })
+    partTweenn2:Play()
+sound = Instance.new("Sound", puddle)
+sound.SoundId = "rbxassetid://9066038215"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    for i = 0, 2 do
+ acid = Instance.new("Part", workspace)
+ acid.Position = puddle.Position + Vector3.new(math.random(-6, 6), 0.5, math.random(-6, 6))
+ acid.Color = Color3.new(0, 0.8, 0)
+ acid.Material = "SmoothPlastic"
+ acid.Size = Vector3.new(3 + i, 3 + i, 3 + i)
+ game.Debris:AddItem(acid, 10)
+ 
+ local recoilDirection = (puddle.Position - acid.Position).Unit
+ acid.Velocity += recoilDirection * 150
+ 
+ acid.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid:GetState() ~= "Dead" and humanoid.Health > 0 then
+humanoid:TakeDamage(0.1)
+humanoid:ChangeState("FallingDown")
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://298181829"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+      if humanoid.Health <= 0 then
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+        if part:IsA("SpecialMesh") then
+            part:Destroy()
+         elseif part:IsA("BasePart") then
+            part.Color = Color3.new(0, 1, 0)
+            limb = part:Clone()
+            limb.Parent = workspace
+            part.Transparency = 1
+            game.Debris:AddItem(limb, 30)
+        end
+    end
+      end
+   end
+ end)
+    end
+  end
+end)
+            end
+end)
