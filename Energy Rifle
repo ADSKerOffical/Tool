@@ -1,0 +1,251 @@
+back = Instance.new("Part", game.Players.LocalPlayer.Character:FindFirstChild("Torso"))
+back.CanCollide = false
+back.Size = Vector3.new(2, 2, 0.5)
+back.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("Torso").CFrame * CFrame.Angles(1, math.rad(0), 0)
+
+attach = Instance.new("Weld", game.Players.LocalPlayer.Character:FindFirstChild("Torso"))
+attach.Part0 = back
+attach.Part1 = game.Players.LocalPlayer.Character:FindFirstChild("Torso")
+attach.C0 = CFrame.new(-0.8, 0, 0.25) * CFrame.Angles(math.rad(40), math.rad(90), 0) 
+
+sworddec = Instance.new("SpecialMesh", back)
+sworddec.TextureId = "rbxassetid://79429114"
+sworddec.MeshId = "rbxassetid://79429148"
+sworddec.Scale = Vector3.new(1, 1, 1)
+
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Energy Rifle"
+tool.ToolTip = "Weapon of the future with a super sight"
+tool.Grip = CFrame.Angles(0, math.rad(20), 0)
+tool.GripPos = Vector3.new(0, -0.5, 1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local camera = workspace.CurrentCamera
+local aim = false
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://79429148"
+mesh.TextureId = "rbxassetid://79429114"
+mesh.Scale = Vector3.new(1, 1, 1)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.ResetOnSpawn = true
+ScreenGui.Enabled = false
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Take aim"
+Button.Parent = ScreenGui
+
+local function notaimshoot()
+ local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://182634467"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(7)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "http://www.roblox.com/asset/?id=282907010"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "http://www.roblox.com/asset/?id=77170656"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0.3, 0.3, 0.3)
+ball.Shape = "Ball"
+ball.Material = "Neon"
+ball.Size = Vector3.new(1.5, 1.5, 1.5)
+ball.CanCollide = false
+ball.Position = handle.Position
+game.Debris:AddItem(ball, 8)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 600
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+ball:Destroy()
+humanoid:TakeDamage(40)
+humanoid.RootPart.Velocity = ball.CFrame.LookVector * 350
+  end
+end)
+end
+
+local function aimshoot()
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://181004943"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+light = Instance.new("PointLight", handle)
+light.Brightness = 0
+light.Range = 0
+game.Debris:AddItem(light, 5)
+partTweenn2 = game:GetService("TweenService"):Create(light, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {
+        Range = 20,
+        Brightness = 2
+    })
+    partTweenn2:Play()
+  task.wait(0.75)
+partTweenn2 = game:GetService("TweenService"):Create(light, TweenInfo.new(2, Enum.EasingStyle.Linear), {
+        Range = 0,
+        Brightness = 0
+    })
+    partTweenn2:Play()
+ sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://335657174"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * -200
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(1, 1, 1)
+ball.Size = Vector3.zero
+ball.Shape = "Ball"
+ball.Material = "Neon"
+ball.CanCollide = false
+ball.Position = handle.Position
+game.Debris:AddItem(ball, 15)
+
+ball.Touched:Connect(function(hit)
+ humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+humanoid:TakeDamage(4.5)
+local recoilDirection = (ball.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 50
+   end
+end)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 700
+ball.CFrame = CFrame.new(ball.Position, mousehit)
+
+partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(20, 20, 20)
+    })
+    partTweenn2:Play()
+end
+
+local cd = 3
+local lastPressTime = 0
+tool.Activated:Connect(function()
+local currentTime = tick()
+            if currentTime - lastPressTime >= cd then
+                lastPressTime = currentTime
+ if aim then
+aimshoot()
+cd = 6
+ else
+notaimshoot()
+cd = 3
+ end
+     end
+end)
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+ local currentTime = tick()
+            if currentTime - lastPressTime >= 0.3 then
+                lastPressTime = currentTime
+aim = not aim
+if aim then
+partTweenn2 = game:GetService("TweenService"):Create(camera, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        FieldOfView = 30
+    })
+    partTweenn2:Play()
+local sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://130981242"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Players.LocalPlayer.CameraMaxZoomDistance = 0
+game.Players.LocalPlayer.CameraMinZoomDistance = 0
+  else
+local sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://131690369"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+partTweenn2 = game:GetService("TweenService"):Create(camera, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        FieldOfView = 70
+    })
+    partTweenn2:Play()
+game.Players.LocalPlayer.CameraMaxZoomDistance = 100
+game.Players.LocalPlayer.CameraMinZoomDistance = 0
+end
+            end
+end)
+
+tool.Equipped:Connect(function()
+ScreenGui.Enabled = true
+back.Transparency = 1
+  local Anim = Instance.new("Animation")
+  Anim.AnimationId = "rbxassetid://182631367"
+  Anim.Name = "HoldAnim"
+  local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+  k:Play()
+  k:AdjustSpeed(1)
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://8217058484"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
+
+tool.Unequipped:Connect(function()
+ScreenGui.Enabled = false
+back.Transparency = 0
+  local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "HoldAnim" then
+        animation:Stop()
+    end
+end
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://8169233194"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+if aim then
+ partTweenn2 = game:GetService("TweenService"):Create(camera, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        FieldOfView = 70
+    })
+    partTweenn2:Play()
+ aim = not aim
+ cd = 3
+ game.Players.LocalPlayer.CameraMaxZoomDistance = 100
+ game.Players.LocalPlayer.CameraMinZoomDistance = 0
+end
+end)
