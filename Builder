@@ -1,0 +1,253 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Builder"
+tool.ToolTip = "Create something with this tool"
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(90), 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+hammer = Instance.new("SpecialMesh", handle)
+hammer.MeshId = "rbxassetid://16198309"
+hammer.TextureId = "rbxassetid://16198294"
+hammer.Scale = Vector3.new(1.2, 1.2, 1.2)
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.Enabled = false
+
+local colorbuff = false
+
+local TButton = Instance.new("TextBox")
+TButton.Name = "Button"
+TButton.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+TButton.Position = UDim2.new(0.72, 0, 0.6, 0)
+TButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TButton.TextScaled = true
+TButton.Text = ""
+TButton.ClearTextOnFocus = false
+TButton.PlaceholderText = "Width"
+TButton.Parent = ScreenGui
+
+local TButton1 = Instance.new("TextBox")
+TButton1.Name = "Button"
+TButton1.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+TButton1.Position = UDim2.new(0.78, 0, 0.6, 0)
+TButton1.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TButton1.TextColor3 = Color3.fromRGB(255, 255, 255)
+TButton1.TextScaled = true
+TButton1.Text = ""
+TButton1.ClearTextOnFocus = false
+TButton1.PlaceholderText = "Height"
+TButton1.Parent = ScreenGui
+
+local TButton2 = Instance.new("TextBox")
+TButton2.Name = "Button"
+TButton2.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+TButton2.Position = UDim2.new(0.84, 0, 0.6, 0)
+TButton2.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TButton2.TextColor3 = Color3.fromRGB(255, 255, 255)
+TButton2.TextScaled = true
+TButton2.Text = ""
+TButton2.ClearTextOnFocus = false
+TButton2.PlaceholderText = "Length"
+TButton2.Parent = ScreenGui
+
+local TButton3 = Instance.new("TextBox")
+TButton3.Name = "Button"
+TButton3.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+TButton3.Position = UDim2.new(0.9, 0, 0.6, 0)
+TButton3.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TButton3.TextColor3 = Color3.fromRGB(255, 255, 255)
+TButton3.TextScaled = true
+TButton3.Text = ""
+TButton3.ClearTextOnFocus = false
+TButton3.PlaceholderText = "Shape"
+TButton3.Parent = ScreenGui
+
+local TButton4 = Instance.new("TextBox")
+TButton4.Name = "Button"
+TButton4.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+TButton4.Position = UDim2.new(0.96, 0, 0.6, 0)
+TButton4.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TButton4.TextColor3 = Color3.fromRGB(255, 255, 255)
+TButton4.TextScaled = true
+TButton4.Text = ""
+TButton4.ClearTextOnFocus = false
+TButton4.PlaceholderText = "Color"
+TButton4.Parent = ScreenGui
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.72, 0, 0.675, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Color Buff"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+ colorbuff = not colorbuff
+ local sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://6052548458"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+   if colorbuff then
+local partTweenn2 = game:GetService("TweenService"):Create(Button, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    })
+    partTweenn2:Play()
+   else
+local partTweenn2 = game:GetService("TweenService"):Create(Button, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    })
+    partTweenn2:Play()
+   end
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime
+local success, scriptFunction = pcall(function() 
+  if workspace:FindFirstChild("CreatedPartByBuilderTool") then
+workspace:FindFirstChild("CreatedPartByBuilderTool"):Destroy()
+  end
+local partX = tonumber(TButton.Text)
+local partY = tonumber(TButton1.Text)
+local partZ = tonumber(TButton2.Text)
+local partShape = tostring(TButton3.Text)
+local partColor = tostring(TButton4.Text)
+ if partX > 30 and partX ~= nil then
+partX = 30
+ elseif partY > 30 and partY ~= nil then
+partY = 30
+ elseif partZ > 30 and partZ ~= nil then
+partZ = 30
+ elseif partX <= 0 or TButton.Text == nil then
+partX = 3
+TButton.Text = 3
+ elseif partY <= 0 or TButton1.Text == nil then
+partY = 1.5
+TButton1.Text = 1.5
+ elseif partZ <= 0 or TButton2.Text == nil then
+partZ = 1.5
+TButton2.Text = 1.5
+ elseif partX > 25 or partY > 25 or partZ > 25 then
+partX = 25
+partY = 25
+partZ = 25
+ end
+     if partShape:lower() == "triangle" or partShape:lower() == "wedge" then
+  partShape = "Wedge"
+     elseif partShape:lower() == "ball" or partShape:lower() == "sphere" then
+  partShape = "Ball"
+     elseif partShape:lower() == "block" or partShape:lower() == "cube" then
+  partShape = "Block"
+     elseif partShape:lower() == "cylinder" then
+  partShape = "Cylinder"
+     elseif partShape == "" then
+  partShape = "Block"
+  TButton3.Text = "Block"
+     end
+           if partColor:lower() == "white" then
+      partColor = Color3.new(1, 1, 1)
+           elseif partColor:lower() == "black" then
+      partColor = Color3.new(0, 0, 0)
+           elseif partColor:lower() == "red" then
+      partColor = Color3.new(1, 0, 0)
+           elseif partColor:lower() == "orange" then
+      partColor = Color3.new(1, 0.5, 0)
+           elseif partColor:lower() == "yellow" then
+      partColor = Color3.new(1, 1, 0)
+           elseif partColor:lower() == "green" then
+      partColor = Color3.new(0, 1, 0)
+           elseif partColor:lower() == "light blue" or partColor:lower() == "cyan" then
+      partColor = Color3.new(0, 0.5, 1)
+           elseif partColor:lower() == "blue" then
+      partColor = Color3.new(0, 0, 1)
+           elseif partColor:lower() == "violet" or partColor:lower() == "purple" then
+      partColor = Color3.new(0.5, 0, 1)
+           elseif partColor == "" then
+      partColor = Color3.new(1, 1, 1)
+      TButton4.Text = "White"
+           end
+part = Instance.new("Part", workspace)
+part.Name = "CreatedPartByBuilderTool"
+part.Size = Vector3.new(partX, partY, partZ)
+part.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, partY - 2.5, -(partZ - 1))
+part.Shape = partShape
+part.AssemblyLinearVelocity = Vector3.zero
+part.Anchored = false
+part.CanCollide = true
+part.Material = "SmoothPlastic"
+part.Color = partColor
+game.Debris:AddItem(part, 360)
+if colorbuff then
+  if partColor == Color3.new(1, 0, 0) then
+part.Touched:Connect(function(hut)
+ humanod = hut.Parent:FindFirstChildOfClass("Humanoid")
+   if humanod and humanod.Parent ~= game.Players.LocalPlayer.Character and humanod.Health > 0 then
+ humanod:TakeDamage(0.5)
+ sound = Instance.new("Sound", humanod.RootPart)
+sound.SoundId = "rbxassetid://4678745096"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+part.Size = Vector3.new(part.Size.X - 0.05, part.Size.Y - 0.05, part.Size.Z - 0.05)
+        if humanod.Health <= 0 then
+sound = Instance.new("Sound", humanod.RootPart)
+sound.SoundId = "rbxassetid://7065474404"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+        end
+   end
+end)
+  elseif partColor == Color3.new(0, 1, 0) then
+part.Touched:Connect(function(hut)
+ humanod = hut.Parent:FindFirstChildOfClass("Humanoid")
+  if humanod and humanod.Parent == game.Players.LocalPlayer.Character and humanod.Health ~= humanod.MaxHealth then
+humanod.Health += 1
+sound = Instance.new("Sound", humanod.RootPart)
+sound.SoundId = "rbxassetid://1655262564"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  end
+end)
+  end
+ end
+end)
+  if success then
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://542332175"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  else
+local sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://3779045779"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+print(scriptFunction)
+  end
+            end
+end)
+
+tool.Equipped:Connect(function()
+ ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+ ScreenGui.Enabled = false
+end)
