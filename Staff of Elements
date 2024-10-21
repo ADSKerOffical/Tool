@@ -1,0 +1,238 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Staff of Elements"
+tool.ToolTip = "Use the 6 elements namely fire water earth air crystal cold against your enemies"
+tool.GripPos = Vector3.new(0, -1, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+staff = Instance.new("SpecialMesh", handle)
+staff.MeshId = "rbxassetid://34795781"
+staff.TextureId = "rbxassetid://157345185"
+staff.Scale = Vector3.new(2, 2, 2)
+
+local element = 1
+local cdo = 15
+game.Players.LocalPlayer.Character.Humanoid.MaxHealth += 5000
+game.Players.LocalPlayer.Character.Humanoid.Health = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
+
+aura = Instance.new("ParticleEmitter", game.Players.LocalPlayer.Character.HumanoidRootPart)
+aura.Texture = "rbxassetid://26356341"
+aura.Color = ColorSequence.new(Color3.new(0, 1, 0.33), Color3.new(0, 0, 1), Color3.new(1, 1, 0.3))
+local rt = {
+  NumberSequenceKeypoint.new(0, 0),
+  NumberSequenceKeypoint.new(0, 0.8),
+  NumberSequenceKeypoint.new(0, 0),
+  NumberSequenceKeypoint.new(1, 1)
+}
+aura.Transparency = NumberSequence.new(rt)
+aura.Speed = NumberRange.new(0, 0)
+aura.Rotation = NumberRange.new(-180, 180)
+aura.RotSpeed = NumberRange.new(200, 200)
+aura.Size = NumberSequence.new(10, 10)
+aura.Rate = 5
+aura.Drag = 0
+aura.TimeScale = 1
+aura.Brightness = 1
+aura.VelocitySpread = 0
+aura.Acceleration = Vector3.new(0, 0, 0)
+aura.Lifetime = NumberRange.new(0.5, 0.5)
+aura.ZOffset = -1
+aura.LockedToPart = true
+
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+ScreenGui.Enabled = true
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button.Position = UDim2.new(0.86, 0, 0.4, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Select an element"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+   element += 1
+     if element > 6 then
+  element = 0
+     end
+end)
+
+tool.Equipped:Connect(function()
+ ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+ ScreenGui.Enabled = false
+end)
+
+local function fireelementability()
+AsteroidPos = game.Players.LocalPlayer:GetMouse().Hit
+ task.wait(0.3)
+asteroid = Instance.new("Part", workspace)
+asteroid.Material = "CrackedLava"
+asteroid.Color = Color3.new(1, 0, 0)
+asteroid.Shape = "Ball"
+asteroid.Size = Vector3.new(120, 120, 120)
+asteroid.CanCollide = false
+asteroid.Anchored = true
+asteroid.CFrame = AsteroidPos * CFrame.new(0, 2500, -1500)
+game.Debris:AddItem(asteroid, 15)
+
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://5292846003"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+partTweenn2 = game:GetService("TweenService"):Create(asteroid, TweenInfo.new(3, Enum.EasingStyle.Linear), {
+        Position = AsteroidPos.Position
+    })
+    partTweenn2:Play()
+ task.wait(3)
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://7157159568"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://4418405082"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+asteroid.Transparency = 1
+  explo = Instance.new("Part", workspace)
+  explo.Anchored = true
+  explo.Color = Color3.new(1, 0, 0)
+  explo.Size = Vector3.zero
+  explo.Position = AsteroidPos.Position
+  explo.CanCollide = false
+  explo.Material = "Neon"
+  explo.Shape = "Ball"
+  game.Debris:AddItem(explo, 5)
+  
+  partTweenn2 = game:GetService("TweenService"):Create(explo, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Color = Color3.new(0, 0, 0),
+        Size = Vector3.new(300, 300, 300)
+    })
+    partTweenn2:Play()
+    
+crater1 = Instance.new("Part", workspace)
+crater1.Transparency = 1
+crater1.CanCollide = false
+crater1.Position =  AsteroidPos.Position
+crater1.Size = Vector3.new(300, 1, 300)
+crater1.Anchored = true
+game.Debris:AddItem(crater1, 25)
+
+dec1 = Instance.new("Decal", crater1)
+dec1.Texture = "rbxassetid://10228065900"
+dec1.Transparency = 0.1
+dec1.Face = Enum.NormalId.Top
+
+local function createBlock(position)
+  block = Instance.new("Part", workspace)
+  block.Size = Vector3.new(13, 13, 13)
+  block.Position = position - Vector3.new(0, 1, 0)
+  block.Transparency = 1
+  block.Orientation = Vector3.new(math.random(-360, 360), math.random(-360, 360), math.random(-360, 360))
+  block.CanCollide = false
+  block.Color = Color3.new(0.5, 0, 0)
+  block.Material = "SmoothPlastic"
+  block.Anchored = true
+  game.Debris:AddItem(block, 25)
+end
+
+spawn(function()
+for i = 1, 128 do
+  local angle = math.rad(i * (360 / 42))
+  local x = 310 * math.cos(angle)
+  local z = 310 * math.sin(angle)
+  local position = AsteroidPos.Position + Vector3.new(x, 0, z)
+  createBlock(position)
+end
+end)
+    
+    for i = 1, 20 do
+object = Instance.new("Part", workspace)
+object.Material = asteroid.Material
+object.Size = Vector3.new(20, 20, 20)
+object.Color = Color3.new(1, 0, 0)
+object.Position = explo.Position
+local recoilDirection = (explo.Position - object.Position).Unit
+ object.Velocity += recoilDirection * 10
+game.Debris:AddItem(object, 25)
+    end
+    
+    local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - AsteroidPos.Position).magnitude
+        if distance <= 255 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(1350)
+  humanoid:ChangeState("FallingDown")
+  local recoilDirection = (explo.Position - humanoid.RootPart.Position).Unit
+  humanoid.RootPart.Velocity += recoilDirection * 350
+end
+end
+
+local function waterelementability()
+
+end
+
+local function earthelementability()
+ 
+end
+
+local function airelementability()
+
+end
+
+local function crystalelementability()
+
+end
+
+local function coldelementability()
+
+end
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= tonumber(cdo) then
+                lastPressTime = currentTime 
+if element == 1 then
+fireelementability()
+cd = 15
+elseif element == 2 then
+waterelementability()
+cd = 20
+elseif element == 3 then
+earthelementability()
+cd = 20
+elseif element == 4 then
+airelementability()
+cd = 25
+elseif element == 5 then
+crystalelementability()
+cd = 15
+elseif element == 6 then
+coldelementability()
+cd = 20
+end
+            end
+end)
