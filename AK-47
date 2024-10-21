@@ -1,0 +1,82 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "AK-47"
+tool.ToolTip = "Shoot"
+tool.Grip = CFrame.Angles(0, math.rad(20), 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://3824749"
+mesh.TextureId = "rbxassetid://159740858"
+mesh.Scale = Vector3.new(2, 2, 2)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://182634467"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(15)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://5674896655"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0.5, 0.5, 0.5)
+ball.Shape = "Ball"
+ball.Material = "DiamondPlate"
+ball.Size = Vector3.new(0.5, 1.5, 0.5)
+ball.CanCollide = false
+ball.Position = handle.Position
+game.Debris:AddItem(ball, 8)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 600
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ball.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+ball:Destroy()
+humanoid:TakeDamage(10)
+  end
+end)
+            end
+end)
+
+tool.Equipped:Connect(function()
+  local Anim = Instance.new("Animation")
+  Anim.AnimationId = "rbxassetid://182631367"
+  Anim.Name = "HoldAnim"
+  local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+  k:Play()
+  k:AdjustSpeed(1)
+  
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://3742927091"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
+
+tool.Unequipped:Connect(function()
+  local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "HoldAnim" then
+        animation:Stop()
+    end
+end
+end)
