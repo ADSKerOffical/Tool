@@ -1,0 +1,76 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Glass"
+tool.ToolTip = "Gradually destroyed with each attack"
+tool.Grip = CFrame.Angles(math.rad(0), 0, math.rad(90))
+tool.GripPos = Vector3.new(1.7, 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Material = "Glass"
+handle.Transparency = 0.3
+
+local breaking = 0
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1.5 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243827693"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+ task.wait(0.3)
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 9 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(15)
+   breaking += 1
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://7140152893"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+     if breaking >= 10 then
+  handle:Destroy()
+  task.delay(2, function()
+tool:Destroy()
+sound = Instance.new("Sound", game.Players.LocalPlayer.Character.HumanoidRootPart)
+sound.SoundId = "rbxassetid://260496290"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  end)
+     end
+end
+            end
+end)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://96065457"
+Anim.Name = "WarHammer_IdleAnimation"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://96065457" or track.Animation.Name == "WarHammer_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
