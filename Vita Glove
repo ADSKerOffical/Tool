@@ -74,7 +74,7 @@ ScreenGui.Enabled = false
 local Button = Instance.new("TextButton")
 Button.Name = "Button"
 Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
-Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.Position = UDim2.new(0.70, 0, 0.6, 0)
 Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Button.TextScaled = true
@@ -133,6 +133,281 @@ humanoid.Parent["Right Arm"].Velocity = Vector3.new(-150, 0, 0)
 end
 end)
 
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Its raining coconuts"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://9067444671"
+sound.Volume = 4
+sound.PlaybackSpeed = 1
+sound.TimePosition = 0.7
+sound.Looped = false
+sound:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://183412246"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(0.5)
+
+for i = 1, 100 do
+ task.wait()
+coco = Instance.new("MeshPart", workspace)
+ coco.MeshId = "rbxassetid://13083001675"
+ coco.TextureID = "rbxassetid://13083001520"
+ coco.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-200, 200), 100, math.random(-200, 200))
+ coco.Size = Vector3.new(3, 3, 3)
+ coco.Velocity = Vector3.new(0, -300, 0)
+ game.Debris:AddItem(coco, 20)
+  
+  coco.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+  if humanoid.Parent:FindFirstChildOfClass("ForceField") then
+ humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+  end
+  humanoid.Parent:BreakJoints()
+  humanoid:ChangeState("Dead")
+  humanoid:TakeDamage(math.huge)
+  humanoid.Health = 0
+  humanoid.MaxHealth = 0
+   end
+ end)
+end
+  task.wait(1.2)
+ coceo = Instance.new("MeshPart", workspace)
+ coceo.MeshId = "rbxassetid://13083001675"
+ coceo.TextureID = "rbxassetid://13083001520"
+ coceo.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 250, -200)
+ coceo.Size = Vector3.new(20, 20, 20)
+ coceo.Velocity = Vector3.new(0, -1000, 0)
+ game.Debris:AddItem(coceo, 20)
+  spawn(function()
+repeat game:GetService("RunService").Heartbeat:Wait()
+	if coceo.Velocity.Y > 10 then
+		repeat game:GetService("RunService").Heartbeat:Wait() until coceo.Velocity.Y <= 0
+sound = Instance.new("Sound", coceo)
+sound.SoundId = "rbxassetid://4810729508"
+sound.Volume = 6
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - coceo.Position).magnitude
+        if distance <= 200 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ pcall(function()
+humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+ end)
+ local recoilDirection = (coceo.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 600
+ humanoid:ChangeState("FallingDown")
+  humanoid:TakeDamage(humanoid.MaxHealth / 3)
+end
+	end
+until coceo.Parent == nil
+  end)
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.82, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Space Coconut"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+cocon = Instance.new("MeshPart", workspace)
+ cocon.MeshId = "rbxassetid://13083001675"
+ cocon.TextureID = "rbxassetid://178147795"
+ cocon.Anchored = true
+ cocon.CanCollide = false
+ cocon.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 5, 0)
+ cocon.Size = Vector3.new(0, 0, 0)
+ game.Debris:AddItem(cocon, 30)
+ 
+ local function damage()
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - cocon.Position).magnitude
+        if distance <= 100 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:ChangeState("FallingDown")
+ humanoid:TakeDamage(humanoid.MaxHealth / 150)
+ local recoilDirection = (cocon.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 85
+end
+ end
+ 
+spawn(function()
+repeat task.wait(0.025)
+damage()
+cocon.CFrame = cocon.CFrame * CFrame.fromEulerAnglesXYZ(0,math.rad(1),0)
+until cocon.Parent ~= workspace
+end)
+ 
+ partTweenn2 = game:GetService("TweenService"):Create(cocon, TweenInfo.new(1.2, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(3, 3, 3),
+        CFrame = cocon.CFrame * CFrame.new(0, 3, -8)
+    })
+    partTweenn2:Play()
+ 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2162238854"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+loopd = Instance.new("Sound", cocon)
+loopd.SoundId = "rbxassetid://9063726568"
+loopd.Volume = 2
+loopd.PlaybackSpeed = 1
+loopd.Looped = true
+loopd:Play()
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.88, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Drink my milk!"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+ coroutine.wrap(function()
+milk = Instance.new("Part", workspace)
+milk.Size = Vector3.new(1.5, 1.5, 1.5)
+milk.Material = "SmoothPlastic"
+milk.Color = Color3.new(1, 1, 1)
+milk.CFrame = handle.CFrame
+milk.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 150
+game.Debris:AddItem(milk, 60)
+
+  milk.Touched:Connect(function(hit)
+humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+ if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character and humanoid:GetState() ~= "Dead" then
+milk:Destroy()
+humanoid.WalkSpeed = 0
+humanoid.PlatformStand = true
+humanoid.JumpPower = 0
+
+bruu = Instance.new("Sound", humanoid.RootPart)
+bruu.SoundId = "rbxassetid://6910191685"
+bruu.Volume = 5
+bruu.PlaybackSpeed = 1
+bruu.Looped = false
+bruu:Play()
+
+coroutine.wrap(function()
+task.delay(60, function()
+ pcall(function()
+humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+ end)
+ humanoid:TakeDamage(math.huge)
+ humanoid.MaxHealth = 0
+ humanoid.Health = 0
+ end)
+end)()
+
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+      if part:IsA("SpecialMesh") then
+          part.TextureId = ""
+       elseif part:IsA("Part") then
+         part.Color = Color3.new(1, 1, 1)
+       elseif part:IsA("Accessory") then
+        part.Handle.Color = Color3.new(1, 1, 1)
+     end
+  end
+end
+  end)
+ end)()
+end)
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.94, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Meteorite Coconut"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+ coceo = Instance.new("MeshPart", workspace)
+ coceo.MeshId = "rbxassetid://13083001675"
+ coceo.TextureID = "rbxassetid://13083001520"
+ coceo.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 400, -100)
+ coceo.Size = Vector3.new(23, 23, 23)
+ coceo.Velocity = Vector3.new(0, -500, 0)
+ game.Debris:AddItem(coceo, 40)
+  spawn(function()
+repeat game:GetService("RunService").Heartbeat:Wait()
+	if coceo.Velocity.Y > 25 then
+		repeat game:GetService("RunService").Heartbeat:Wait() until coceo.Velocity.Y <= 0
+sound = Instance.new("Sound", coceo)
+sound.SoundId = "rbxassetid://4810729508"
+sound.Volume = 8
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - coceo.Position).magnitude
+        if distance <= 200 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ pcall(function()
+humanoid.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+ end)
+ local recoilDirection = (coceo.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 600
+ humanoid:ChangeState("FallingDown")
+  humanoid:TakeDamage(humanoid.MaxHealth / 3)
+end
+	end
+until coceo.Parent == nil
+  end)
+end)
+ 
 tool.Equipped:Connect(function()
  ScreenGui.Enabled = true
 end)
