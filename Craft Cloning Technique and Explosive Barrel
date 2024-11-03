@@ -1,0 +1,89 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Explosion Clone"
+tool.ToolTip = "Craft Cloning Technique + Explosive Barrel"
+tool.RequiresHandle = false
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://54456096"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(3)
+ task.wait(0.2)
+game.Players.LocalPlayer.Character.Archivable = true
+game.Players.LocalPlayer.Character.Humanoid.Archivable = true
+clone = game.Players.LocalPlayer.Character:Clone()
+hum = game.Players.LocalPlayer.Character.Humanoid:Clone()
+clone.Parent = workspace
+hum.Parent = clone
+hum.Name = "Explosive Clone"
+
+sound = Instance.new("Sound", hum)
+sound.SoundId = "rbxassetid://147722165"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", tool.Parent.HumanoidRootPart)
+sound.SoundId = "rbxassetid://6892830182"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(clone, 30)
+
+hum.Health = game.Players.LocalPlayer.Character.Humanoid.Health
+hum.MaxHealth = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
+pcall(function()
+hum.RootPart.CFrame = tool.Parent.HumanoidRootPart.CFrame * CFrame.new(0, 0, -2)
+end)
+  task.wait(2)
+explode = Instance.new("Part", workspace)
+explode.Size = Vector3.zero
+explode.CanCollide = false
+explode.Anchored = true
+explode.Shape = "Ball"
+explode.Material = "Neon"
+explode.Color = Color3.new(1, 0, 0)
+explode.Position = hum.RootPart.Position
+game.Debris:AddItem(explode, 10)
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character and v.Parent ~= clone then
+        local distance = (v.RootPart.Position - hum.RootPart.Position).magnitude
+        if distance <= 75 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(75)
+  local recoilDirection = (hum.RootPart.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -200
+end
+
+partTweenn2 = game:GetService("TweenService"):Create(explode, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(90, 90, 90),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+hum.Health = 0
+for _, part in ipairs(clone:GetDescendants()) do
+    if part:IsA("BasePart") then
+fire = Instance.new("Fire", part)
+fire.Heat = 0
+fire.Size = 10
+part.Velocity = Vector3.new(100, 0, 0)
+    end
+end
+            end
+end)
