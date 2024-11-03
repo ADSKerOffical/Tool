@@ -1,0 +1,150 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Maxancer"
+tool.ToolTip = "Craft Blue Cancer + Maxwell"
+tool.Grip = CFrame.Angles(math.rad(0), math.rad(0), math.rad(0))
+tool.GripPos = Vector3.new(0, 0, 0)
+
+mainpart = Instance.new("Part", tool)
+mainpart.Transparency = 0
+mainpart.Name = "Handle"
+mainpart.Size = Vector3.zero
+
+arm1p = Instance.new("Part", mainpart)
+arm1p.Size = Vector3.new(1, 1, 1)
+
+arm2p = Instance.new("Part", mainpart)
+arm2p.Size = Vector3.new(1, 1, 1)
+
+headp = Instance.new("Part", mainpart)
+headp.Size = Vector3.new(1, 1, 1)
+
+arm1 = Instance.new("SpecialMesh", arm1p)
+arm1.MeshId = "rbxassetid://13200088262"
+arm1.TextureId = "rbxassetid://11390783210"
+arm1.Scale = Vector3.new(0.6, 0.6, 0.6)
+
+arm2 = arm1:Clone()
+arm2.Parent = arm2p
+
+head = Instance.new("SpecialMesh", headp)
+head.MeshId = "rbxassetid://13200081913"
+head.TextureId = "rbxassetid://11390783210"
+head.Scale = Vector3.new(0.7, 0.7, 0.7)
+
+armjoint1 = Instance.new("Weld", mainpart)
+armjoint1.Part0 = mainpart
+armjoint1.Part1 = arm1p
+armjoint1.C0 = CFrame.new(-1, 0, -0.3) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0))
+
+armjoint2 = Instance.new("Weld", mainpart)
+armjoint2.Part0 = mainpart
+armjoint2.Part1 = arm2p
+armjoint2.C0 = CFrame.new(1, 0, -0.3) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(180))
+
+headjoint = Instance.new("Weld", mainpart)
+headjoint.Part0 = mainpart
+headjoint.Part1 = headp
+headjoint.C0 = CFrame.new(0, 0, 0)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "rbxassetid://1060191237"
+sound.Volume = 5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+shockwave = Instance.new("Part", workspace)
+shockwave.CFrame = tool.Handle.CFrame
+shockwave.Size = Vector3.zero
+shockwave.Material = "SmoothPlastic"
+shockwave.Color = Color3.new(1, 1, 1)
+shockwave.Anchored = true
+shockwave.CanCollide = false
+game.Debris:AddItem(shockwave, 4)
+
+modelsw = Instance.new("SpecialMesh", shockwave)
+modelsw.Scale = Vector3.new(1, 1, 1)
+modelsw.MeshId = "rbxassetid://173770780"
+
+local partTweenn2 = game:GetService("TweenService"):Create(shockwave, TweenInfo.new(0.7, Enum.EasingStyle.Quad), {
+        Transparency = 1
+    })
+    partTweenn2:Play()
+    
+local partTweenn2 = game:GetService("TweenService"):Create(modelsw, TweenInfo.new(0.7, Enum.EasingStyle.Quad), {
+        Scale = Vector3.new(120, 1, 120)
+    })
+    partTweenn2:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - Usuario.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 85 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, huim in pairs(foundHumanoids) do
+ coroutine.wrap(function()
+for _, part in pairs(huim.Parent:GetDescendants()) do
+                        if part:IsA("BasePart") then
+   part.AssemblyLinearVelocity = Vector3.zero
+   part.CanTouch = false
+   part.Transparency = 1
+                        end
+                    end
+     if huim.Parent:FindFirstChildOfClass("ForceField") then
+   huim.Parent:FindFirstChildOfClass("ForceField"):Destroy()
+     end
+      huim:ChangeState("Dead")
+      huim:TakeDamage(math.huge)
+      huim.Health = 0
+        cati = Instance.new("Part", workspace)
+        cati.CFrame = huim.Parent.Head.CFrame
+        cati.Locked = true
+        cati.CanTouch = false
+        cati.Anchored = false
+        game.Debris:AddItem(cati, 120)
+        
+        caf = Instance.new("SpecialMesh", cati)
+        caf.Scale = Vector3.new(0.001, 0.001, 0.001)
+        caf.MeshId = "rbxassetid://11390783129"
+        caf.TextureId = "rbxassetid://11390783210"
+        
+        meow = Instance.new("Sound", cati)
+        meow.SoundId = "rbxassetid://1091083826"
+        meow.Volume = 2
+        meow.PlaybackSpeed = 1
+        meow.Looped = false
+        meow:Play()
+ end)()
+end
+            end
+end)
+
+tool.Equipped:Connect(function()
+ ff = Instance.new("ForceField", game.Players.LocalPlayer.Character)
+end)
+
+tool.Unequipped:Connect(function()
+ game.Players.LocalPlayer.Character:FindFirstChildOfClass("ForceField"):Destroy()
+end)
+
+spawn(function()
+repeat wait() until tool.Parent == game.Players.LocalPlayer.Character
+game.Players.LocalPlayer.Character.Humanoid.MaxHealth += 1000
+sound = Instance.new("Sound", workspace)
+sound.SoundId = "rbxassetid://2261507666"
+sound.Volume = 2
+sound.PlaybackSpeed = 0.8
+sound.Looped = false
+sound:Play()
+end)
