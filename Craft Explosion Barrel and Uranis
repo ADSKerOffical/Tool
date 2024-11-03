@@ -1,0 +1,135 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Toxic Barrel"
+tool.ToolTip = "Craft Explosive Barrel + Uranus"
+
+handle = game:GetObjects("rbxassetid://166201793")[1]
+handle.Parent = tool
+handle.Name = "Handle"
+handle.Anchored = false
+handle:FindFirstChildOfClass("SpecialMesh").Scale = handle:FindFirstChildOfClass("SpecialMesh").Scale / 1.4
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+  if currentTime - lastPressTime >= 8 then
+    lastPressTime = currentTime
+
+    local Anim = Instance.new("Animation")
+    Anim.AnimationId = "rbxassetid://31020869"
+    local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+    k:Play()
+    k:AdjustSpeed(1)
+
+    sound = Instance.new("Sound", tool.Handle)
+    sound.SoundId = "rbxassetid://9116673944"
+    sound.Volume = 1
+    sound.PlaybackSpeed = 1
+    sound.Looped = false
+    sound:Play()
+    task.wait(1)
+    sound = Instance.new("Sound", tool.Handle)
+    sound.SoundId = "rbxassetid://7430246006"
+    sound.Volume = 2
+    sound.PlaybackSpeed = 1
+    sound.Looped = false
+    sound:Play()
+
+    barrel = game:GetObjects("rbxassetid://166201793")[1]
+    barrel.Anchored = false
+    barrel.Parent = workspace
+    barrel.CFrame = game.Players.LocalPlayer.Character.PrimaryPart.CFrame * CFrame.new(0, 0, -1)
+    barrel.Velocity = handle.CFrame.LookVector * 100
+    barrel:FindFirstChildOfClass("SpecialMesh").VertexColor = Vector3.new(0, 1, 0)
+    game.Debris:AddItem(barrel, 13)
+
+    barrel.Touched:Connect(function(hitPart)
+      if hitPart:IsA("BasePart") then
+        sound = Instance.new("Sound", barrel)
+        sound.SoundId = "rbxassetid://9116887596"
+        sound.Volume = 1
+        sound.Pitch = 1
+        sound:Play()
+      end
+    end)
+    task.wait(3)
+explosion = Instance.new("Part", workspace)
+explosion.Anchored = true
+explosion.CanCollide = false
+explosion.Color = Color3.new(0, 1, 0)
+explosion.Size = Vector3.zero
+explosion.Shape = "Ball"
+explosion.Position = barrel.Position
+explosion.Material = "Neon"
+game.Debris:AddItem(explosion, 10)
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - explosion.Position).magnitude
+        if distance <= 40 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(40)
+ humanoid:ChangeState("FallingDown")
+end
+
+partTweenn2 = game:GetService("TweenService"):Create(explosion, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Size = Vector3.new(60, 60, 60),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+
+sound = Instance.new("Sound", barrel)
+sound.SoundId = "rbxassetid://5801257793"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+loop = Instance.new("Sound", barrel)
+loop.SoundId = "rbxassetid://251407575"
+loop.Volume = 0.6
+loop.PlaybackSpeed = 1
+loop.Looped = true
+loop:Play()
+    barrel.Velocity = Vector3.new(0, 150, 0)
+smoke = Instance.new("Smoke", barrel)
+smoke.Color = Color3.new(0, 1, 0)
+smoke.Opacity = 0.2
+smoke.RiseVelocity = 10
+smoke.Size = 1.5
+
+sound = Instance.new("Sound", barrel)
+sound.SoundId = "rbxassetid://4962360929"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+     spawn(function()
+ for i = 1, 24 do
+task.wait(0.3)
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - barrel.Position).magnitude
+        if distance <= 60 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+  for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(2)
+ humanoid.RootPart.AssemblyLinearVelocity = Vector3.zero
+  end
+end
+     end)
+  end
+end)
