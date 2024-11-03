@@ -1,0 +1,51 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Glass Boots"
+tool.ToolTip = "Craft Jump Boots + Glass"
+tool.GripPos = Vector3.new(1.5, 2.7, -1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Material = "Glass"
+handle.Transparency = 0.45
+
+jumpboots = Instance.new("SpecialMesh", handle)
+jumpboots.MeshId = "rbxassetid://181202048"
+jumpboots.TextureId = "rbxassetid://0"
+jumpboots.Scale = Vector3.new(1, 1, 1)
+
+gyt = game.Players.LocalPlayer.Character.Humanoid.Jumping:Connect(function()
+ if tool.Parent == game.Players.LocalPlayer.Character then
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 200
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://6678636911"
+sound.Volume = 2
+sound.PlaybackSpeed = 0.9
+sound.Looped = false
+sound:Play()
+  repeat wait() until game.Players.LocalPlayer.Character.Humanoid:GetState() ~= "Jumping"
+    repeat wait() until game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity.Y <= 0
+sound = Instance.new("Sound", game.Players.LocalPlayer.Character.HumanoidRootPart)
+sound.SoundId = "rbxassetid://626807593"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ for i = 1, 10 do
+glass = Instance.new("Part", workspace)
+glass.Position = handle.Position
+glass.Size = Vector3.new(1, 1, 1)
+glass.Material = "Glass"
+glass.Transparency = 0.65
+game.Debris:AddItem(glass, 40)
+ end
+ game.Players.LocalPlayer.Character.Humanoid:ChangeState("FallingDown")
+ game.Players.LocalPlayer.Character.Humanoid:TakeDamage(10)
+  handle:Destroy()
+  gyt:Disconnect()
+  game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+  tool.ToolTip = "Oops the boots are broken now they dont work"
+else
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+ end
+end)
