@@ -1,0 +1,195 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Fire Tornado Grenade"
+tool.ToolTip = "Craft Tornado Grenade and Volcano Grenade"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Size = Vector3.new(1, 1, 1)
+handle.Material = "CrackedLava"
+handle.Color = Color3.new(180, 0, 0)
+
+gren = Instance.new("SpecialMesh", handle)
+gren.MeshId = "rbxassetid://47679879"
+gren.Scale = Vector3.new(1.5, 1.5, 1.5)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 20 then
+                lastPressTime = currentTime 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://5699659105"
+sound.Volume = 1
+sound.TimePosition = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+grenade = handle:Clone()
+grenade.Parent = workspace
+grenade.CanCollide = true
+grenade.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
+grenade.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 100
+game.Debris:AddItem(grenade, 4)
+ spawn(function()
+repeat wait(0.1)
+pcall(function()
+ if grenade.AssemblyLinearVelocity > 10 then
+  sound = Instance.new("Sound", grenade)
+  sound.SoundId = "rbxassetid://6700004586"
+  sound.Volume = 0.5
+  sound.PlaybackSpeed = 1
+  sound.Looped = false
+  sound:Play()
+ end
+end)
+until grenade.Parent ~= game.Workspace
+ end)
+   task.wait(3)
+tornado = Instance.new("MeshPart", workspace)
+tornado.MeshId = "rbxassetid://102638417"
+tornado.Size = Vector3.zero
+tornado.Color = Color3.new(0.6, 0, 0)
+tornado.Anchored = true
+tornado.CanCollide = false
+tornado.Position = grenade.Position
+game.Debris:AddItem(tornado, 13)
+
+partTweenn2 = game:GetService("TweenService"):Create(tornado, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(10, 10, 10),
+        Position = tornado.Position + Vector3.new(0, 15, 0)
+    })
+    partTweenn2:Play()
+
+sound = Instance.new("Sound", tornado)
+sound.SoundId = "rbxassetid://335657174"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+loop = Instance.new("Sound", tornado)
+loop.SoundId = "rbxassetid://2037036550"
+loop.Volume = 2.5
+loop.PlaybackSpeed = 0.8
+loop.Looped = false
+loop.TimePosition = 1.3
+loop:Play()
+
+local cansuck = true
+
+explode = Instance.new("Part", workspace)
+explode.Size = Vector3.zero
+explode.Color = Color3.new(1, 0, 0)
+explode.Shape = "Ball"
+explode.Anchored = true
+explode.Material = "Neon"
+explode.CanCollide = false
+explode.Position = grenade.Position
+game.Debris:AddItem(explode, 4)
+
+partTweenn2 = game:GetService("TweenService"):Create(explode, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(80, 80, 80),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+    
+ task.delay(0.3, function()
+sound = Instance.new("Sound", explode)
+sound.SoundId = "rbxassetid://1909632970"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ end)
+ 
+ for i = 1, 8 do
+ lava = Instance.new("Part", workspace)
+ lava.Position = grenade.Position + Vector3.new(math.random(-10, 10), 1, math.random(-10, 10))
+ lava.Material = "Neon"
+ lava.Color = Color3.fromRGB(245, 135, 10)
+local ga = math.random(1, 4)
+ lava.Size = Vector3.new(ga, ga, ga)
+ local recoilDirection = (grenade.Position - lava.Position).Unit
+ lava.Velocity += recoilDirection * 400
+ game.Debris:AddItem(lava, 15)
+ 
+sound = Instance.new("Sound", lava)
+sound.SoundId = "rbxassetid://318794788"
+sound.Volume = 0.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ 
+ lava.Touched:Connect(function(hit)
+humanoi = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoi and humanoi.Health > 0 then
+ humanoi:TakeDamage(1)
+ 
+sound = Instance.new("Sound", humanoi.RootPart)
+sound.SoundId = "rbxassetid://298181829"
+sound.Volume = 0.6
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    end
+ end)
+end
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart then
+        local distance = (v.RootPart.Position - explode.Position).magnitude
+        if distance <= 45 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(45)
+ humanoid:ChangeState("FallingDown")
+ local recoilDirection = (explode.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 100
+end
+
+local function suck()
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart then
+        local distance = (v.RootPart.Position - tornado.Position).magnitude
+        if distance <= 40 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+ for _, humanoid in pairs(foundHumanoids) do
+humanoid:TakeDamage(0.2)
+humanoid:ChangeState("FallingDown")
+local recoilDirection = (tornado.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 30
+ end
+end
+
+spawn(function()
+repeat task.wait()
+tornado.CFrame = tornado.CFrame * CFrame.fromEulerAnglesXYZ(0,math.rad(4.5),0)
+suck()
+until tornado.Parent ~= workspace or cansuck == false
+end)
+ task.wait(10)
+cansuck = false
+partTweenn2 = game:GetService("TweenService"):Create(loop, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        Volume = 0
+    })
+    partTweenn2:Play()
+partTweenn2 = game:GetService("TweenService"):Create(tornado, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        Size = Vector3.zero,
+        Position = tornado.Position - Vector3.new(0, 15, 0)
+    })
+   partTweenn2:Play()
+            end
+end)
