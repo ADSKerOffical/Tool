@@ -1,0 +1,129 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "SD-605.AV"
+tool.ToolTip = "Craft SD-24 + Empty-605.AV"
+tool.GripPos = Vector3.new(0, 0, 1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+guni = Instance.new("SpecialMesh", handle)
+guni.Scale = Vector3.new(1.5, 1.5, 1.5)
+guni.MeshId = "rbxassetid://98400644"
+guni.TextureId = "rbxassetid://98400574"
+guni.VertexColor = Vector3.new(0.4, 0.4, 0.4)
+
+local damagebuff = 0
+local sizebuff = 1.5
+local speedunbuff = 0
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.4 then
+                lastPressTime = currentTime
+    sizebuff += 0.2
+    damagebuff += 0.65
+    speedunbuff += 10
+      if sizebuff >= 5 then
+  sizebuff = 1.5  
+      elseif damagebuff >= 11 then
+  damagebuff = 0
+      elseif speedunbuff >= 170 then
+  speedunbuff = 0
+      end
+      
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2783473931"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+  ball = Instance.new("Part", workspace)
+  ball.Color = Color3.new(0.5, 0.5, 0.5)
+  ball.Shape = "Ball"
+  ball.Material = "Neon"
+  ball.Size = Vector3.new(sizebuff, sizebuff, sizebuff)
+  ball.CanCollide = true
+  ball.Position = handle.Position
+  game.Debris:AddItem(ball, 8)
+
+  local bodyVelocity = Instance.new("BodyVelocity", ball)
+  bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+  bodyVelocity.Velocity = (mouse.Hit.Position - ball.Position).Unit * (185 - speedunbuff)
+  
+  spawn(function()
+repeat
+            local nearestHumanoid = nil
+            local nearestDistance = math.huge
+            for _, humanoidd in ipairs(workspace:GetDescendants()) do
+                if humanoidd:IsA("Humanoid") and humanoidd.Health ~= 0 and humanoidd.Parent ~= game.Players.LocalPlayer.Character then
+                    local distance = (humanoidd.RootPart.Position - ball.Position).Magnitude
+                    if distance < nearestDistance then
+                        nearestHumanoid = humanoidd
+                        nearestDistance = distance
+                    end
+                end
+            end
+
+            if nearestHumanoid then
+                bodyVelocity.Velocity = (nearestHumanoid.RootPart.Position - ball.Position).Unit * 125
+                ball.CFrame = CFrame.new(ball.Position, nearestHumanoid.RootPart.Position)
+            else
+                bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            end
+
+            task.wait(0.1)
+        until not ball or not ball.Parent
+ end)
+  
+  ball.Touched:Connect(function(hit)
+    local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid and humanoid.Parent ~= game.Players.LocalPlayer.Character then
+      humanoid:TakeDamage(5 + damagebuff)
+      
+      expl = Instance.new("Part", workspace)
+      expl.Size = Vector3.zero
+      expl.Shape = "Ball"
+      expl.Material = "Neon"
+      expl.Color = Color3.new(0.5, 0.5, 0.5)
+      expl.CanCollide = false
+      expl.Position = ball.Position
+      expl.Anchored = true
+      game.Debris:AddItem(expl, 2)
+      
+   partTweenn2 = game:GetService("TweenService"):Create(expl, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Color = Color3.new(0, 0, 0),
+        Size = Vector3.new(40, 40, 40)
+    })
+    partTweenn2:Play()
+    
+sound = Instance.new("Sound", expl)
+sound.SoundId = "rbxassetid://12221984"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    
+    local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - expl.Position).magnitude
+        if distance <= 20 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(10 + damagebuff)
+end
+  ball:Destroy()
+    end
+  end)
+ end
+end)
