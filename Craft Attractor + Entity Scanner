@@ -1,0 +1,80 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Radactor"
+tool.ToolTip = "Craft Attractor + Entity Scanner"
+tool.GripPos = Vector3.new(0, -0.4, 0.8)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://169450033"
+mesh.TextureId = "rbxassetid://29515949"
+mesh.Scale = Vector3.new(1.4, 1.4, 1.4)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 20 then
+                lastPressTime = currentTime 
+local sounda = Instance.new("Sound", handle)
+sounda.SoundId = "rbxassetid://9112776779"
+sounda.Volume = 1
+sounda.PlaybackSpeed = 1
+sounda.Looped = false
+sounda:Play()
+game.Debris:AddItem(sounda, 10)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxasset://sounds/electronicpingshort.wav"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+expl = Instance.new("MeshPart", workspace)
+ expl.MeshId = "rbxassetid://1185246"
+ expl.Color = Color3.new(1, 1, 1)
+ expl.Size = Vector3.new(0, 0.2, 0)
+ expl.Anchored = true
+ expl.Position = tool.Parent.Humanoid.RootPart.Position
+ expl.CanCollide = false
+ game.Debris:AddItem(expl, 4)
+ 
+ partTweenn2 = game:GetService("TweenService"):Create(expl, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Size = Vector3.new(300, 0.2, 300),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 200 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+   coroutine.wrap(function()
+for i = 1, #foundHumanoids do
+humanoid:TakeDamage(i * 1.5)
+ end
+ local Highlight = Instance.new("Highlight")
+Highlight.Parent = humanoid.Parent
+Highlight.Adornee = humanoid.Parent
+Highlight.FillTransparency = 0.5
+Highlight.FillColor = Color3.fromRGB(150 ,150, 150)
+Highlight.OutlineColor = Color3.fromRGB(150, 150, 150)
+Highlight.OutlineTransparency = 0.5
+ game.Debris:AddItem(Highlight, 10)
+
+ humanoid:ChangeState("FallingDown")
+ humanoid.RootPart.AssemblyLinearVelocity = Vector3.zero
+   end)()
+end
+            end
+end)
