@@ -1,0 +1,59 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player:WaitForChild("Backpack"))
+tool.Name = "Omega Slap"
+tool.ToolTip = "Super Craft Super Slap + Super Slap"
+tool.RequiresHandle = false
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243827693"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+  task.wait(0.3)
+  
+ball = Instance.new("Part", workspace)
+ball.Size = Vector3.zero
+ball.Color = Color3.new(1, 1, 1)
+ball.Anchored = true
+ball.CanCollide = false
+ball.Material = "Neon"
+ball.Shape = "Ball"
+ball.Position = player.Character.HumanoidRootPart.Position
+game.Debris:AddItem(ball, 3)
+
+partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Size = Vector3.new(25, 25, 25),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 14 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(165)
+  humanoid.Sit = true
+  humanoid:ChangeState("FallingDown")
+  humanoid.RootPart.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 500 + Vector3.new(0, 100, 0)
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://8395374561"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+            end
+end)
