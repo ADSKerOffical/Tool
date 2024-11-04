@@ -1,0 +1,32 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Wheel of Harmony"
+tool.ToolTip = "Adds health and regeneration to the wearer"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://15374641553"
+mesh.TextureId = "rbxassetid://15375477134"
+mesh.Scale = Vector3.new(0.01, 0.01, 0.01)
+
+tool.Activated:Connect(function()
+ wheel = handle:Clone()
+ wheel.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 200
+ wheel.Name = "Wheel of Harmony"
+ wheel.Anchored = false
+ wheel.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", wheel)
+ joint1.C0 = CFrame.new(0, 1, 0)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = wheel
+   spawn(function()
+repeat task.wait()
+ player.Character.Humanoid.Health += 2
+until not player.Character.Humanoid or player.Character.Humanoid:GetState() == "Dead"
+   end)
+end)
