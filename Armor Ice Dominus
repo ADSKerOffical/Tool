@@ -1,0 +1,79 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Ice Dominus"
+tool.ToolTip = "Gives the wearer the ability to freeze entities"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://21057410"
+mesh.TextureId = "rbxassetid://48544900"
+mesh.Scale = Vector3.new(1.2, 1.2, 1.2)
+
+tool.Activated:Connect(function()
+ hat = handle:Clone()
+ hat.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 50
+ hat.Name = "Ice Dominus"
+ hat.Anchored = false
+ hat.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", hat)
+ joint1.C0 = CFrame.new(0, 0, 0)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = hat
+ 
+ ttool = Instance.new("Tool", player.Backpack)
+ ttool.Name = "Freezing"
+ ttool.RequiresHandle = false
+ 
+ local lastPressTime = 0
+ttool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://54456096"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2.3)
+ task.wait(0.3)
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - hat.Position).magnitude
+        if distance <= 40 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ coroutine.wrap(function()
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+   if part:IsA("BasePart") then
+ part.Anchored = true
+   end
+end
+IceBlock = Instance.new("Part", workspace)
+IceBlock.BrickColor = BrickColor.new("Baby blue")
+IceBlock.Size = Vector3.new(5, 7, 5)
+IceBlock.Transparency = 0.5
+IceBlock.Anchored = true
+IceBlock.Material = "Ice"
+IceBlock.Position = humanoid.RootPart.Position
+game.Debris:AddItem(IceBlock, 4)
+ task.wait(4)
+for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+  if part:IsA("BasePart") then
+ part.Anchored = false
+  end
+end
+ end)()
+end
+            end
+end)
+ end)
