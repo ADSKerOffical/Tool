@@ -1,0 +1,33 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "White Dominus"
+tool.ToolTip = "Restores all carrier HP every minute"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://21057410"
+mesh.TextureId = "rbxassetid://21057378"
+mesh.Scale = Vector3.new(1.2, 1.2, 1.2)
+
+tool.Activated:Connect(function()
+ hat = handle:Clone()
+ hat.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 50
+ hat.Name = "White Dominus"
+ hat.Anchored = false
+ hat.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", hat)
+ joint1.C0 = CFrame.new(0, 0, 0)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = hat
+   spawn(function()
+repeat 
+player.Character.Humanoid.Health = player.Character.Humanoid.MaxHealth
+ task.wait(60)
+until not player.Character.Humanoid or player.Character.Humanoid:GetState() == "Dead"
+   end)
+end)
