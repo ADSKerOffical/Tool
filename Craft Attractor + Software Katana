@@ -1,0 +1,127 @@
+tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Aetherblade"
+tool.ToolTip = "Craft Attractor + Software Katana"
+tool.Grip = CFrame.Angles(math.rad(0), math.rad(90), math.rad(90))
+tool.GripPos = Vector3.new(0, 0, -2.2)
+local canattackk = true
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://11442510"
+mesh.TextureId = "rbxassetid://168892595"
+mesh.Scale = Vector3.new(2, 2, 2)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 and canattackk == true then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://94161088"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k.Looped = false
+k:Play()
+k:AdjustSpeed(1.5)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://5989945551"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 0.85
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+Usuario = game.Players.LocalPlayer
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 9 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(30)
+  for i = 1, #foundHumanoids do
+ humanoid:TakeDamage(2.5)
+  end
+end
+
+wall = Instance.new("Part", workspace)
+wall.Material = "ForceField"
+wall.CanCollide = false
+wall.Anchored = true
+wall.Color = Color3.new(0.4, 0.4, 0.4)
+wall.Size = Vector3.new(15, 10, 2)
+wall.CFrame = tool.Parent.HumanoidRootPart.CFrame * CFrame.new(0, 4, -4)
+game.Debris:AddItem(wall, 1)
+
+wall.Touched:Connect(function(hit)
+ humano = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humano and humano.Parent ~= tool.Parent then
+humano:TakeDamage(2.5)
+local recoilDirection = (handle.Position - humano.RootPart.Position).Unit
+ humano.RootPart.Velocity += recoilDirection * 20
+  end
+end)
+
+local partTweenn2 = game:GetService("TweenService"):Create(wall, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        Position = wall.Position + tool.Parent.HumanoidRootPart.CFrame.LookVector * 50,
+        Transparency = 1
+    })
+    partTweenn2:Play()
+ partTweenn2.Completed:Connect(function()
+wall:Destroy()
+ end)
+            end
+end)
+
+tool.Equipped:Connect(function()
+canattackk = false
+handle.Transparency = 1
+local Anim = Instance.new("Animation")
+Anim.Name = "Equip"
+Anim.AnimationId = "rbxassetid://33248324"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(0.5)
+  task.wait(0.8)
+local partTweenn2 = game:GetService("TweenService"):Create(handle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 0
+    })
+    partTweenn2:Play()
+  sound = Instance.new("Sound", handle)
+  sound.SoundId = "rbxassetid://7067340377"
+  sound.Volume = 1.5
+  sound.PlaybackSpeed = 0.85
+  sound.Looped = false
+  sound:Play()
+ task.wait(0.2)
+canattackk = true
+end)
+
+tool.Unequipped:Connect(function()
+handle.Transparency = 0
+local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "Equip" then
+        animation:Stop()
+    end
+end
+end)
+
+spawn(function()
+repeat task.wait(0.1)
+if tool.Parent ~= game.Players.LocalPlayer.Character then
+local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "Idle" then
+        animation:Stop()
+    end
+end
+end
+until tool.Parent == nil or handle.Parent == nil
+end)
