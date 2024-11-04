@@ -1,0 +1,57 @@
+camera = game:GetObjects("rbxassetid://9239732180")[1]
+camera.Name = "Camera"
+camera.Parent = game.Players.LocalPlayer.Backpack
+camera.ToolTip = "Say cheese"
+
+local lastPressTime = 0
+camera.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 10 then
+                lastPressTime = currentTime 
+laser = Instance.new("SurfaceLight", camera.Handle)
+laser.Range = 50
+laser.Color = Color3.fromRGB(255, 255, 255)
+laser.Brightness = 10
+laser.Shadows = true
+laser.Face = "Front"
+game.Debris:AddItem(laser, 2)
+
+local foundHumanoids = {}
+local Usuario = game.Players.LocalPlayer
+local radius = 6
+local origin = Usuario.Character.HumanoidRootPart.Position
+local direction = Usuario.Character.HumanoidRootPart.CFrame.LookVector
+
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= Usuario.Character then
+        local humanoidPosition = v.RootPart.Position
+        local toHumanoid = humanoidPosition - origin
+        local distance = toHumanoid.magnitude
+        local angle = math.acos(toHumanoid.Unit:Dot(direction))
+
+        if distance <= 20 and angle < math.rad(30) then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+    humanoid:TakeDamage(25)
+    humanoid.RootPart.AssemblyLinearVelocity = Vector3.zero
+    humanoid:UnequipTools()
+end
+
+sound1 = Instance.new("Sound", camera.Handle)
+sound1.SoundId = "rbxassetid://515689563"
+sound1.Volume = 2
+sound1.TimePosition = 0.4
+sound1.PlaybackSpeed = 1
+sound1.Looped = false
+sound1:Play()
+
+partTweenn1 = game:GetService("TweenService"):Create(laser, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        Brightness = 0
+    })
+    partTweenn1:Play()
+            end
+end)
