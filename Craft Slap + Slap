@@ -1,0 +1,40 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player:WaitForChild("Backpack"))
+tool.Name = "Super Slap"
+tool.ToolTip = "Craft Slap + Slap"
+tool.RequiresHandle = false
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243827693"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+  task.wait(0.3)
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 10 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(35)
+  humanoid.Sit = true
+  humanoid.RootPart.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 150
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://8395374561"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+            end
+end)
