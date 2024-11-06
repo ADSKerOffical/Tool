@@ -1,0 +1,34 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Black Fedora"
+tool.ToolTip = "Increases the wearers movement speed"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://1285237"
+mesh.TextureId = "rbxassetid://259418230"
+mesh.Scale = Vector3.new(1, 1, 1)
+
+tool.Activated:Connect(function()
+ hat = handle:Clone()
+ hat.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 25
+ hat.Name = "Part"
+ hat.Anchored = false
+ hat.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", hat)
+ joint1.C0 = CFrame.new(0, 0.7, 0)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = hat
+   spawn(function()
+repeat wait()
+ if player.Character.Humanoid.WalkSpeed < 30 then
+player.Character.Humanoid.WalkSpeed = 30
+ end
+until not player.Character.Humanoid or player.Character.Humanoid:GetState() == "Dead" or hat == nil or hat.Parent ~= player.Character.Head or not joint1
+   end)
+end)
