@@ -1,0 +1,66 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Dark Dominus"
+tool.ToolTip = "There is a 12.5% chance that the wearer will create a shockwave when jumping"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://162384581"
+mesh.TextureId = "rbxassetid://162384608"
+mesh.Scale = Vector3.new(1, 1, 1)
+
+tool.Activated:Connect(function()
+ hat = handle:Clone()
+ hat.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 100
+ hat.Name = "Part"
+ hat.Anchored = false
+ hat.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", hat)
+ joint1.C0 = CFrame.new(0, 0, 0.15)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = hat
+  local con = player.Character.Humanoid.Jumping:Connect(function()
+ local jpev = math.random(1, 8)
+      if jpev >= 8 then
+ player.Character.HumanoidRootPart.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 150 + Vector3.new(0, 100, 0)
+ ball = Instance.new("Part", workspace)
+ ball.Color = Color3.new(0, 0, 0)
+ ball.Material = "Neon"
+ ball.CanCollide = false
+ ball.Shape = "Ball"
+ ball.Size = Vector3.zero
+ ball.Position = player.Character.HumanoidRootPart.Position
+ game.Debris:AddItem(ball, 3)
+ 
+ local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - ball.Position).magnitude
+        if distance <= 15 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(20)
+  local recoilDirection = (ball.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 100
+end
+ 
+local partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(20, 20, 20)
+    })
+    partTweenn2:Play()
+      end
+       if not player.Character.Humanoid or player.Character.Humanoid:GetState() == "Dead" or hat == nil or hat.Parent ~= player.Character.Head or not joint1 then
+         con:Disconnect()
+       end
+   end)
+end)
