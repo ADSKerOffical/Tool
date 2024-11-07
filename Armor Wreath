@@ -1,0 +1,44 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Wreath"
+tool.ToolTip = "Resurrects the wearer after death and makes them invulnerable for 5 seconds"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://138937497"
+mesh.TextureId = "rbxassetid://138937524"
+mesh.Scale = Vector3.new(1, 1, 1)
+
+tool.Activated:Connect(function()
+ hat = handle:Clone()
+ hat.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 25
+ hat.Name = "Part"
+ hat.Anchored = false
+ hat.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", hat)
+ joint1.C0 = CFrame.new(0, 0.6, 0)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = hat
+   spawn(function()
+repeat wait() until player.Character.Humanoid.Health <= 1
+player.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+partTweenn2 = game:GetService("TweenService"):Create(hat:FindFirstChildOfClass("SpecialMesh"), TweenInfo.new(3, Enum.EasingStyle.Linear), {
+        VertexColor = Vector3.new(0.25, 0.25, 0.25)
+    })
+    partTweenn2:Play()
+task.wait(10)
+player.Character.Humanoid.Health += player.Character.Humanoid.MaxHealth / 2
+player.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
+drop = hat:Clone()
+drop.Parent = workspace
+drop.CanCollide = true
+drop:FindFirstChildOfClass("Weld"):Destroy()
+game.Debris:AddItem(drop, 100)
+hat:Destroy()
+   end)
+end)
