@@ -1,0 +1,44 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Cone"
+tool.ToolTip = "When killed, it leaves a cone that will deal damage when touched"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://14701901850"
+mesh.TextureId = "rbxassetid://14701367375"
+mesh.Scale = Vector3.new(1, 1, 1)
+
+tool.Activated:Connect(function()
+ hat = handle:Clone()
+ hat.Parent = player.Character.Head
+ tool:Destroy()
+ player.Character.Humanoid.MaxHealth += 75
+ hat.Name = "Part"
+ hat.Anchored = false
+ hat.CanCollide = false
+ 
+ joint1 = Instance.new("Weld", hat)
+ joint1.C0 = CFrame.new(0, 1.4, 0)
+ joint1.Part0 = player.Character.Head
+ joint1.Part1 = hat
+   spawn(function()
+repeat wait() until player.Character.Humanoid.Health <= 0 or not player.Character.Humanoid:GetState() == "Dead" or not player.Character.Humanoid
+cone = Instance.new("MeshPart", workspace)
+cone.MeshId = "rbxassetid://14701901850"
+cone.TextureID = "rbxassetid://14701367375"
+cone.Position = hat.Position
+cone.Anchored = false
+cone.Size = Vector3.new(1, 1, 1)
+
+cone.Touched:Connect(function(hit)
+ local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Health > 0 then
+ humanoid:TakeDamage(2)
+ humanoid.Sit = true
+   end
+end)
+   end)
+end) 
