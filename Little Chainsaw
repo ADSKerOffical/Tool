@@ -1,0 +1,77 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Little Chainsaw"
+tool.GripPos = Vector3.new(0, 0, 1)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://2766469"
+mesh.TextureId = "rbxassetid://185441602"
+mesh.Scale = Vector3.new(1.2, 1.2, 1.2)
+
+idle = Instance.new("Sound", handle)
+idle.SoundId = "rbxassetid://5960458961"
+idle.Volume = 1
+idle.PlaybackSpeed = 1
+idle.Looped = true
+idle:Play()
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://203672003"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+ wait()
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://4815024605"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  for i = 1, 2 do
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 6 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(24)
+end
+wait(0.125)
+  end
+            end
+end)
+
+tool.Equipped:Connect(function()
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2766589"
+sound.Volume = 1
+sound.PlaybackSpeed = 1.1
+sound.TimePosition = 0.1
+sound.Looped = false
+sound:Play()
+
+local partTweenn2 = game:GetService("TweenService"):Create(idle, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+        Volume = 1
+    })
+    partTweenn2:Play()
+end)
+
+tool.Unequipped:Connect(function()
+local partTweenn2 = game:GetService("TweenService"):Create(idle, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+        Volume = 0
+    })
+    partTweenn2:Play()
+end)
