@@ -1,0 +1,125 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "BazooAK-47"
+tool.ToolTip = "Craft AK-47 + Bazooka"
+tool.Grip = CFrame.Angles(0, math.rad(20), 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://3824749"
+mesh.TextureId = "rbxassetid://88745396"
+mesh.Scale = Vector3.new(2, 2, 2)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://182634467"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(15)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://5674896655"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+ball = Instance.new("Part", workspace)
+ball.Color = Color3.new(0.5, 0.5, 0.5)
+ball.Shape = "Ball"
+ball.Material = "DiamondPlate"
+ball.Size = Vector3.new(0.5, 1.5, 0.5)
+ball.CanCollide = false
+ball.Position = handle.Position
+game.Debris:AddItem(ball, 8)
+
+Mouse = game.Players.LocalPlayer:GetMouse()
+mousehit = Mouse.Hit.Position
+
+bodyVelocity = Instance.new("BodyVelocity", ball)
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bodyVelocity.Velocity = (mousehit - ball.Position).Unit * 600
+                ball.CFrame = CFrame.new(ball.Position, mousehit)
+                
+ball.Touched:Connect(function(hitPart)
+if hitPart:IsA("BasePart") and hitPart ~= handle and hitPart.Parent ~= player.Character then
+explosion = Instance.new("Explosion", workspace)
+explosion.BlastRadius = 40
+explosion.ExplosionType = Enum.ExplosionType.Craters
+explosion.Position = ball.Position
+explosion.Visible = false
+
+main = Instance.new("Part", workspace)
+main.Position = ball.Position
+main.Size = Vector3.zero
+main.Color = Color3.new(0.8, 0, 0)
+main.Shape = "Ball"
+main.Material = "Neon"
+main.Anchored = true
+main.CanCollide = false
+main.CanTouch = false
+game.Debris:AddItem(main, 5)
+ball:Destroy()
+
+partTweenn1 = game:GetService("TweenService"):Create(main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(60, 60, 60)
+    })
+    partTweenn1:Play()
+ sound = Instance.new("Sound", main)
+sound.SoundId = "rbxassetid://165969964"
+sound.Volume = 10
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart then
+        local distance = (v.RootPart.Position - main.Position).magnitude
+        if distance <= 60 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(20)
+  humanoid.RootPart.Velocity = humanoid.RootPart.CFrame.LookVector * -150 + Vector3.new(0, 100, 0)
+  humanoid:ChangeState("FallingDown")
+end
+ end
+end)
+            end
+end)
+
+tool.Equipped:Connect(function()
+  local Anim = Instance.new("Animation")
+  Anim.AnimationId = "rbxassetid://182631367"
+  Anim.Name = "HoldAnim"
+  local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+  k:Play()
+  k:AdjustSpeed(1)
+  
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://3742927091"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
+
+tool.Unequipped:Connect(function()
+  local animations = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+for i, animation in ipairs(animations) do
+    if animation.Animation.Name == "HoldAnim" then
+        animation:Stop()
+    end
+end
+end)
