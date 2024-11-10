@@ -1,0 +1,92 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Black Hole Creator"
+tool.ToolTip = "Merge infinite mass and infinite density"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+phone = Instance.new("SpecialMesh", handle)
+phone.MeshId = "rbxassetid://87653956"
+phone.TextureId = "rbxassetid://87653762"
+phone.Scale = Vector3.new(1, 1, 1)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 15 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://49456429"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+local cansuck = false
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxasset://sounds/electronicpingshort.wav"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+object = Instance.new("Part", workspace)
+object.Anchored = true
+object.CanCollide = false
+object.CFrame = handle.CFrame * CFrame.new(0, 2, -3)
+object.Color = Color3.new(1, 0, 0)
+object.Shape = "Ball"
+object.Material = "Neon"
+object.Size = Vector3.new(3, 3, 3)
+game.Debris:AddItem(object, 4)
+
+partTweenn2 = game:GetService("TweenService"):Create(object, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        Size = Vector3.zero,
+        Color = Color3.new(1, 1, 1)
+    })
+    partTweenn2:Play()
+wait(1.3)
+cansuck = true
+bh = Instance.new("MeshPart", workspace)
+bh.MeshId = "rbxassetid://10691561431"
+bh.Position = object.Position
+bh.Size = Vector3.zero
+bh.Anchored = true
+bh.Material = "Neon"
+bh.CanCollide = false
+bh.Color = Color3.new(0, 0, 0)
+game.Debris:AddItem(bh, 10)
+
+spawn(function()
+ repeat task.wait()
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - bh.Position).magnitude
+        if distance <= 100 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(0.3)
+ local recoilDirection = (bh.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * 200
+end
+ until bh.Parent == nil or cansuck == false
+end)
+
+partTweenn2 = game:GetService("TweenService"):Create(bh, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(5, 5, 5)
+    })
+    partTweenn2:Play()
+wait(7)
+cansuck = false
+partTweenn2 = game:GetService("TweenService"):Create(bh, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+        Size = Vector3.zero
+    })
+    partTweenn2:Play()
+            end
+end)
