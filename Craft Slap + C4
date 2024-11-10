@@ -1,0 +1,66 @@
+player = game.Players.LocalPlayer
+local api = loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/API/refs/heads/main/Api.lua"))()
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Explosive Slap"
+tool.ToolTip = "Craft Slap + C4"
+tool.RequiresHandle = false
+
+local function edpl(part)
+sound = Instance.new("Sound", part)
+sound.SoundId = "rbxassetid://7818612635"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 1 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://243827693"
+local k = game:GetService("Players").LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+  task.wait(0.3)
+    explosion = Instance.new("Explosion", workspace)
+    explosion.Position = player.Character.HumanoidRootPart.Position + Vector3.new(0, 0, -3)
+    explosion.BlastRadius = 0
+    explosion.BlastPressure = 100
+    explosion.ExplosionType = Enum.ExplosionType.Craters
+    explosion.TimeScale = 0.3
+
+    crater = Instance.new("MeshPart", workspace)
+    crater.Position = player.Character.HumanoidRootPart.Position - Vector3.new(0, 2.25, 0)
+    crater.MeshId = "rbxassetid://6656319394"
+    crater.Size = Vector3.new(1, 1, 1)
+    crater.Color = Color3.new(0.5, 0.5, 0.5)
+  pcall(function()
+    crater.Color = api:GetFloorPartOnPart(crater).Color
+  end)
+    crater.Anchored = true
+    crater.CanCollide = false
+    crater.Material = player.Character.Humanoid.FloorMaterial
+edpl(crater)
+    
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
+        if distance <= 12 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(35)
+  humanoid.Sit = true
+  local recoilDirection = (player.Character.HumanoidRootPart.Position - humanoid.RootPart.Position).Unit
+  humanoid.RootPart.Velocity += recoilDirection * -100
+  edpl(humanoid.RootPart)
+end
+  end
+end)
