@@ -1,0 +1,99 @@
+player = game.Players.LocalPlayer
+local api = loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/API/refs/heads/main/Api.lua"))()
+
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Sledgehammer"
+tool.ToolTip = ""
+tool.GripPos = Vector3.new(0, -2, 0)
+tool.ToolTip = "Deal heavy damage to entities"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+phone = Instance.new("SpecialMesh", handle)
+phone.MeshId = "rbxassetid://1279013"
+phone.TextureId = "rbxassetid://1279012"
+phone.Scale = Vector3.new(0.8, 1.4, 0.8)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 3 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://746307388"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1.5)
+wait(0.2)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://3923230963"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+if player.Character.Humanoid:GetState() ~= "Freefall" and player.Character.Humanoid:GetState() ~= "Jumping" then
+    crater = Instance.new("MeshPart", workspace)
+    crater.Position = player.Character.HumanoidRootPart.Position - Vector3.new(0, 2.25, 0)
+    crater.MeshId = "rbxassetid://6656319394"
+    crater.Size = Vector3.new(1, 1, 1)
+    crater.Color = Color3.new(0.5, 0.5, 0.5)
+  pcall(function()
+    crater.Color = api:GetFloorPartOnPart(crater).Color
+  end)
+    crater.Anchored = true
+    crater.CanCollide = false
+    crater.Material = player.Character.Humanoid.FloorMaterial
+    game.Debris:AddItem(crater, 10)
+end
+
+shockwave = Instance.new("MeshPart", workspace)
+shockwave.MeshId = "rbxassetid://20329976"
+shockwave.Anchored = true
+shockwave.CanCollide = false
+shockwave.Size = Vector3.zero
+shockwave.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, -2, -3)
+game.Debris:AddItem(shockwave, 4)
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - shockwave.Position).magnitude
+        if distance <= 15 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(65)
+ local recoilDirection = (shockwave.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -100
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(shockwave, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        Transparency = 1,
+        Size = Vector3.new(12, 6, 12)
+    })
+    partTweenn2:Play()
+            end
+end)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://96065457"
+Anim.Name = "WarHammer_IdleAnimation"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(player.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://96065457" or track.Animation.Name == "WarHammer_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
