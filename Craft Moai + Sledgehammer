@@ -1,0 +1,164 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Moai Crusher"
+tool.GripPos = Vector3.new(0, -2, 0)
+tool.ToolTip = "Craft Sledgehammer + Moai"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://1279013"
+mesh.TextureId = "rbxassetid://15881163"
+mesh.Scale = Vector3.new(1, 1, 1)
+
+local function shakeCam()
+local humanoid = game.Players.LocalPlayer.Character.Humanoid
+local camera = workspace.CurrentCamera
+local originalOffset = humanoid.CameraOffset
+
+local shakeIntensity = 3
+local shakeSpeed = 0.01
+
+function shakeCamera()
+ local shakeOffset = Vector3.new(
+  math.random(-shakeIntensity, shakeIntensity) / 10,
+  math.random(-shakeIntensity, shakeIntensity) / 10,
+  math.random(-shakeIntensity, shakeIntensity) / 10
+ )
+ local originalOffset = humanoid.CameraOffset
+ local currentTime = 0
+ local duration = shakeSpeed
+ while currentTime < duration do
+  local delta = currentTime/duration
+  humanoid.CameraOffset = originalOffset + shakeOffset * (1 - delta)
+  currentTime = currentTime + wait()
+ end
+ humanoid.CameraOffset = originalOffset
+end
+
+for i = 1, 30 do
+ shakeCamera()
+ task.wait()
+end
+end
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 3 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://746307388"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1.5)
+wait(0.2)
+k:AdjustSpeed(3)
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://3802269741"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", tool.Handle)
+sound.SoundId = "http://www.roblox.com/asset/?id=10730819"
+sound.Volume = 8
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+if player.Character.Humanoid:GetState() ~= "Freefall" and player.Character.Humanoid:GetState() ~= "Jumping" then
+    crater = Instance.new("MeshPart", workspace)
+    crater.Position = player.Character.HumanoidRootPart.Position - Vector3.new(0, 2.25, 0)
+    crater.MeshId = "rbxassetid://6656319394"
+    crater.Size = Vector3.new(6, 6, 6)
+    crater.Color = Color3.new(0.5, 0.5, 0.5)
+  pcall(function()
+    crater.Color = api:GetFloorPartOnPart(player.Character.HumanoidRootPart).Color
+  end)
+    crater.Anchored = true
+    crater.CanCollide = false
+    crater.Material = player.Character.Humanoid.FloorMaterial
+    game.Debris:AddItem(crater, 10)
+    
+crater1 = Instance.new("Part", crater)
+crater1.Transparency = 1
+crater1.CanCollide = false
+crater1.Position = crater.Position - Vector3.new(0, 0, 0)
+crater1.Size = Vector3.new(100, 1, 100)
+crater1.Anchored = true
+game.Debris:AddItem(crater1, 10)
+
+dec1 = Instance.new("Decal", crater1)
+dec1.Texture = "rbxassetid://10228065900"
+dec1.Transparency = 0.1
+dec1.Face = Enum.NormalId.Top
+end
+
+shockwave = Instance.new("MeshPart", workspace)
+shockwave.MeshId = "rbxassetid://5747850601"
+shockwave.Anchored = true
+shockwave.CanCollide = false
+shockwave.Size = Vector3.zero
+shockwave.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, -2, -3)
+game.Debris:AddItem(shockwave, 4)
+
+shockwave1 = Instance.new("MeshPart", workspace)
+shockwave1.MeshId = "rbxassetid://20329976"
+shockwave1.Anchored = true
+shockwave1.CanCollide = false
+shockwave1.Size = Vector3.zero
+shockwave1.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, -2, -3)
+game.Debris:AddItem(shockwave1, 4)
+coroutine.wrap(shakeCam)()
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - shockwave.Position).magnitude
+        if distance <= 85 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(105)
+ humanoid:ChangeState("FallingDown")
+ humanoid:UnequipTools()
+ local recoilDirection = (shockwave.Position - humanoid.RootPart.Position).Unit
+ humanoid.RootPart.Velocity += recoilDirection * -200
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(shockwave, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(40, 40, 40),
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+local partTweenn2 = game:GetService("TweenService"):Create(shockwave1, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Size = Vector3.new(80, 30, 80)
+    })
+    partTweenn2:Play()
+            end
+end)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://96065457"
+Anim.Name = "WarHammer_IdleAnimation"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(player.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://96065457" or track.Animation.Name == "WarHammer_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
