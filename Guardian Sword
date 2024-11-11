@@ -1,0 +1,166 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Sword of the Guard"
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(90), 0)
+tool.GripPos = Vector3.new(0, 0, -2.7)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://7164525439"
+mesh.TextureId = "rbxassetid://582954183"
+mesh.Scale = Vector3.new(1.6, 1, 1.4)
+
+local function slhitS(part)
+sound = Instance.new("Sound", part)
+sound.SoundId = "rbxassetid://935843979"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end
+
+local function damag()
+slash = Instance.new("MeshPart", workspace)
+slash.MeshId = "rbxassetid://10322213741"
+slash.Size = Vector3.zero
+slash.CFrame = player.Character.HumanoidRootPart.CFrame
+slash.Anchored = true
+slash.CanCollide = false
+slash.Color = Color3.new(0.25, 0.25, 0.25)
+game:GetService(slash, 2)
+
+sound = Instance.new("Sound", slash)
+sound.SoundId = "rbxassetid://8145344127"
+sound.Volume = 3
+sound.PlaybackSpeed = math.random(10, 12) / 10
+sound.Looped = false
+sound:Play()
+
+local partTweenn2 = game:GetService("TweenService"):Create(slash, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Color = Color3.new(0, 0, 0),
+        CFrame = slash.CFrame * CFrame.new(0, 0, -10) * CFrame.Angles(0, math.rad(100), 0),
+        Size = Vector3.new(5, 5, 5)
+    })
+    partTweenn2:Play()
+    
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - handle.Position).magnitude
+        if distance <= 15 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+   for _, humanoid in pairs(foundHumanoids) do
+humanoid:TakeDamage(15)
+humanoid.RootPart.Velocity = slash.CFrame.LookVector * 70
+slhitS(humanoid.RootPart)
+   end
+end
+
+local lastPressTime = 0
+local lpt = 0
+local canattack = true
+local clickCount = 0
+
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.2 and canattack then
+                lastPressTime = currentTime 
+local ipo = math.random(1, 2)
+ if ipo == 1 then
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://218504594"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2.4)
+   else
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://186934658"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+end
+ damag()
+
+local currentTime2 = tick()
+    if currentTime2 - lpt <= 0.6 then
+        clickCount = clickCount + 1
+    else
+        clickCount = 1
+    end
+
+    lpt = currentTime2
+
+    if clickCount >= 3 then
+ canattack = false
+spikes = Instance.new("MeshPart", workspace)
+spikes.MeshId = "rbxassetid://92588061"
+spikes.Position = player.Character.HumanoidRootPart.Position - Vector3.new(0, 60, 0)
+spikes.CanCollide = false
+spikes.Anchored = true
+spikes.Material = "Neon"
+spikes.Color = Color3.new(0.1, 0.1, 0.1)
+spikes.Size = Vector3.new(5, 5, 5)
+game.Debris:AddItem(spikes, 5)
+
+task.delay(0.5, function()
+ local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - spikes.Position).magnitude
+        if distance <= 16 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(65)
+ humanoid.Sit = true
+ humanoid.RootPart.Velocity = Vector3.new(0, -50, 0)
+ slhitS(humanoid.RootPart)
+end
+end)
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://183412246"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+local partTweenn2 = game:GetService("TweenService"):Create(spikes, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Position = player.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+    })
+    partTweenn2:Play()
+wait(2)
+local partTweenn2 = game:GetService("TweenService"):Create(spikes, TweenInfo.new(1.5, Enum.EasingStyle.Exponential), {
+        Position = player.Character.HumanoidRootPart.Position - Vector3.new(0, 100, 0)
+    })
+    partTweenn2:Play()
+ canattack = true
+   end
+            end
+end)
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://48138189"
+Anim.Name = "WarHammer_IdleAnimation"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(player.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://48138189" or track.Animation.Name == "WarHammer_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
