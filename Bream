@@ -1,0 +1,110 @@
+local player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Bream"
+tool.ToolTip = "Throw a bream in the face at your enemies"
+tool.GripPos = Vector3.new(0, -0.3, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+fisha = Instance.new("SpecialMesh", handle)
+fisha.MeshId = "rbxassetid://1725219705"
+fisha.TextureId = "rbxassetid://1725222355"
+fisha.Scale = Vector3.new(1, 1, 1)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 6 then
+                lastPressTime = currentTime 
+coroutine.wrap(function()
+pew = Instance.new("Sound", handle)
+pew.SoundId = "rbxassetid://608600954"
+pew.Volume = 1
+pew.PlaybackSpeed = 1
+pew.Looped = false
+pew:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://209875013"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+ fish = handle:Clone()
+ fish.Parent = workspace
+ fish.CanCollide = true
+ fish.Size *= 2
+ fish.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 450
+ fish:FindFirstChildOfClass("SpecialMesh").Scale *= 2
+ game.Debris:AddItem(fish, 30)
+ 
+ handle.Transparency = 1
+ local partTweenn2 = game:GetService("TweenService"):Create(handle, TweenInfo.new(6, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+    partTweenn2:Play()
+ 
+ local conec1 = fish.Touched:Connect(function(hit)
+local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Parent ~= player.Character then
+fish.CanTouch = false
+ humanoid:TakeDamage(50)
+ humanoid.RootPart.Velocity = fish.CFrame.LookVector * 100
+ humanoid:ChangeState("FallingDown")
+ 
+sound = Instance.new("Sound", fish)
+sound.SoundId = "rbxassetid://8766809464"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+   end
+ end)
+   wait(10)
+  if fish.CanTouch == true and fish ~= nil then
+conec1:Disconnect()
+local conec2 = fish.Touched:Connect(function(hit)
+local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+  if humanoid then
+ fish.CanTouch = false
+sound = Instance.new("Sound", fish)
+sound.SoundId = "rbxassetid://573314737"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", fish)
+sound.SoundId = "rbxassetid://9068935533"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = true
+sound:Play()
+
+fire = Instance.new("Fire", fish)
+fire.Heat = 0
+fire.Size = 20
+fish:FindFirstChildOfClass("SpecialMesh").VertexColor = Vector3.new(0.15, 0.15, 0.15)
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart then
+        local distance = (v.RootPart.Position - fish.Position).magnitude
+        if distance <= 15 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(75)
+ humanoid.Sit = true
+ humanoid.RootPart.Velocity = Vector3.new(0, 200, 0)
+end
+  end
+end)
+  end
+end)()
+            end
+end)
