@@ -1,0 +1,72 @@
+local player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Glass Bream"
+tool.ToolTip = "Throws a fish that one-shots anyone, but it's disposable"
+tool.GripPos = Vector3.new(0, -0.3, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Transparency = 0.2
+handle.Material = "Glass"
+
+fisha = Instance.new("SpecialMesh", handle)
+fisha.MeshId = "rbxassetid://1725219705"
+fisha.Scale = Vector3.new(1, 1, 1)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 6 then
+                lastPressTime = currentTime 
+pew = Instance.new("Sound", handle)
+pew.SoundId = "rbxassetid://608600954"
+pew.Volume = 1
+pew.PlaybackSpeed = 1
+pew.Looped = false
+pew:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://209875013"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+ fish = handle:Clone()
+ fish.Parent = workspace
+ fish.CanCollide = true
+ fish.Size *= 2
+ fish.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 450
+ fish:FindFirstChildOfClass("SpecialMesh").Scale *= 2
+ game.Debris:AddItem(fish, 30)
+ tool:Destroy()
+ 
+ local conec1 = fish.Touched:Connect(function(hit)
+local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Parent ~= player.Character then
+fish.CanTouch = false
+ humanoid:TakeDamage(math.huge)
+ humanoid.RootPart.Velocity = fish.CFrame.LookVector * 250
+ humanoid:ChangeState("FallingDown")
+ 
+ for i = 1, 6 do
+glass = Instance.new("Part", workspace)
+glass.Position = fish.Position
+glass.Material = "Glass"
+glass.Shape = "CornerWedge"
+glass.Transparency = 0.3
+glass.Size = Vector3.new(1, 1, 1)
+glass.Velocity = fish.Velocity
+game.Debris:AddItem(glass, 20)
+ end
+ fish:Destroy()
+ 
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://260496290"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+   end
+ end)
+   end
+end)
