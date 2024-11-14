@@ -1,0 +1,67 @@
+local player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Briream"
+tool.ToolTip = "Craft Attractor + Bream"
+tool.GripPos = Vector3.new(0, -0.3, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+fisha = Instance.new("SpecialMesh", handle)
+fisha.MeshId = "rbxassetid://1725219705"
+fisha.TextureId = "rbxassetid://168892595"
+fisha.Scale = Vector3.new(1, 1, 1)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 6 then
+                lastPressTime = currentTime 
+pew = Instance.new("Sound", handle)
+pew.SoundId = "rbxassetid://608600954"
+pew.Volume = 1
+pew.PlaybackSpeed = 1
+pew.Looped = false
+pew:Play()
+
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://209875013"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+ fish = handle:Clone()
+ fish.Parent = workspace
+ fish.CanCollide = true
+ fish.Size *= 2
+ fish.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 450
+ fish:FindFirstChildOfClass("SpecialMesh").Scale *= 2
+ game.Debris:AddItem(fish, 30)
+ 
+ handle.Transparency = 1
+ local partTweenn2 = game:GetService("TweenService"):Create(handle, TweenInfo.new(6, Enum.EasingStyle.Linear), {
+        Transparency = 0
+    })
+    partTweenn2:Play()
+ 
+ local conec1 = fish.Touched:Connect(function(hit)
+local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Parent ~= player.Character then
+fish.CanTouch = false
+ humanoid:TakeDamage(50)
+ local partTweenn2 = game:GetService("TweenService"):Create(humanoid.RootPart, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {
+        CFrame = tool.Handle.CFrame * CFrame.new(0, 0, -2)
+    })
+    partTweenn2:Play()
+ humanoid:ChangeState("FallingDown")
+ 
+sound = Instance.new("Sound", fish)
+sound.SoundId = "rbxassetid://8766809464"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+   end
+ end)
+   end
+end)
