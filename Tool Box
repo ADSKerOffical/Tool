@@ -1,0 +1,90 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Tool Box"
+tool.Grip = CFrame.Angles(math.rad(0), 0, 0)
+tool.GripPos = Vector3.new(0, 0, 0)
+tool.ToolTip = "From this box you can get other tools"
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Size = Vector3.new(1.5, 1.5, 1.5)
+
+for _, face in ipairs(Enum.NormalId:GetEnumItems()) do
+mesh = Instance.new("Texture", handle)
+mesh.Texture = "rbxassetid://5850567969"
+mesh.Face = face
+end
+
+tool.Activated:Connect(function()
+box = handle:Clone()
+tool:Destroy()
+box.Parent = workspace
+box.CanCollide = true
+game.Debris:AddItem(box, 10)
+ spawn(function()
+repeat wait(0.5)
+ if box.Velocity.Magnitude >= 10 then
+c = Instance.new("Part", workspace)
+c.Anchored = true
+c.CanCollide = false
+c.Position = box.Position
+c.Size = Vector3.zero
+game.Debris:AddItem(c, 4)
+
+crater = Instance.new("SpecialMesh", c)
+crater.MeshId = "rbxassetid://6656319394"
+crater.TextureId = "rbxassetid://5850567969"
+crater.Scale = Vector3.zero
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - box.Position).magnitude
+        if distance <= 30 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(10)
+ humanoid.Sit = true
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(crater, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(10, 1, 10)
+    })
+    partTweenn2:Play()
+local partTweenn2 = game:GetService("TweenService"):Create(c, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1
+    })
+    partTweenn2:Play()
+ end
+until box.Parent == nil
+ end)
+  wait(1.5)
+sound = Instance.new("Sound", box)
+sound.SoundId = "rbxassetid://7846700665"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+   wait(2)
+ for i = 1, 2 do
+local de = math.random(1, 6)
+  if de == 1 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Tool/refs/heads/main/Metal%20Bat"))()
+  elseif de == 2 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Tool/refs/heads/main/Bream"))()
+  elseif de == 3 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Tool/refs/heads/main/Sledgehammer"))()
+  elseif de == 4 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Tool/refs/heads/main/Guardian%20Sword"))()
+  elseif de == 5 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Tool/refs/heads/main/Uno"))()
+  elseif de == 6 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Tool/refs/heads/main/Inverted%20Spear"))()
+  end
+  wait(0.2)
+ end
+end)
