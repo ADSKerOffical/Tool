@@ -1,0 +1,60 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Anvil"
+tool.Grip = CFrame.Angles(math.rad(0), 0, 0)
+tool.GripPos = Vector3.new(0, 0, 0)
+tool.ToolTip = ""
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Color = Color3.new(0.2, 0.2, 0.2)
+handle.Material = "Metal"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://18549581423"
+mesh.Scale = Vector3.new(1.5, 1.5, 1.5)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 7 then
+                lastPressTime = currentTime 
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://54611484"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+ wait(0.6)
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://608600954"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+avil = handle:Clone()
+avil.Parent = workspace
+avil.CanCollide = true
+avil.Size *= 1.5
+avil.Velocity = player.Character.HumanoidRootPart.CFrame.LookVector * 500
+game.Debris:AddItem(avil, 10)
+
+ avil.Touched:Connect(function(hit)
+local humanoid = hit.Parent:FindFirstChildOfClass("Humanoid")
+   if humanoid and humanoid.Parent ~= player.Character then
+ humanoid:TakeDamage(10)
+ humanoid.Sit = true
+ humanoid.RootPart.Velocity = avil.CFrame.LookVector * (25 + avil.Velocity.Magnitude)
+ 
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://8899349982"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+    repeat wait() until avil.Velocity.Magnitude <= 0
+avil.CanTouch = false
+   end
+ end)
+            end
+end)
