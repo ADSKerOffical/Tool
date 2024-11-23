@@ -1,0 +1,114 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Sign"
+tool.ToolTip = "Do you want rich robux but no money? then go to notscam.com and get rich robux absolutely free"
+tool.GripPos = Vector3.new(1.5, -0.4, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Color = Color3.new(1, 1, 1)
+handle.Size = Vector3.new(3, 3, 0.25)
+
+decal = Instance.new("Decal", handle)
+decal.Texture = "rbxassetid://496077816"
+decal.Face = Enum.NormalId.Front
+
+tool.Equipped:Connect(function()
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://223623937"
+Anim.Name = "WarHammer_IdleAnimation"
+local k = player.Character.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(1)
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://2706199011"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
+
+tool.Unequipped:Connect(function()
+for _, track in ipairs(player.Character.Humanoid:GetPlayingAnimationTracks()) do
+      if track.Animation.AnimationId == "rbxassetid://223623937" or track.Animation.Name == "WarHammer_IdleAnimation" then
+      track:Stop()
+      end
+end
+end)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 2 then
+                lastPressTime = currentTime 
+local partTweenn2 = game:GetService("TweenService"):Create(tool, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {
+        GripPos = tool.GripPos + Vector3.new(0, 0, 5)
+    })
+    partTweenn2:Play()
+    
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://101164100"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local foundHumanoids = {}
+local radius = 6
+local origin = player.Character.HumanoidRootPart.Position
+local direction = player.Character.HumanoidRootPart.CFrame.LookVector
+
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= player.Character then
+        local humanoidPosition = v.RootPart.Position
+        local toHumanoid = humanoidPosition - origin
+        local distance = toHumanoid.magnitude
+        local angle = math.acos(toHumanoid.Unit:Dot(direction))
+
+        if distance <= 12 and angle < math.rad(30) then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+   local frtb = math.random(1, 10)
+ if frtb <= 9 then
+  humanoid:TakeDamage(25)
+  humanoid.Sit = true
+  
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://608539282"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  else
+humanoid:ChangeState("FallingDown")
+humanoid.Sit = true
+humanoid:TakeDamage(60)
+humanoid.RootPart.Velocity = handle.CFrame.LookVector * 50 + Vector3.new(0, 200, 0)
+
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://6186631227"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ end
+end
+ task.wait(0.2)
+local partTweenn2 = game:GetService("TweenService"):Create(tool, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {
+        GripPos = Vector3.new(1.5, -0.4, 0)
+    })
+    partTweenn2:Play()
+            end
+end)
+
+spawn(function()
+repeat wait(20)
+local images = {496077816, 10427371074, 388881189, 98326904}
+decal.Texture = "rbxassetid://".. tostring(images[math.random(1, #images)])
+until handle.Parent ~= tool
+end)
