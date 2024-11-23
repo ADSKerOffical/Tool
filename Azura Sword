@@ -1,0 +1,301 @@
+player = game.Players.LocalPlayer
+tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Azura Sword"
+tool.GripPos = Vector3.new(0, -2.5, 0)
+
+handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://94840342"
+mesh.TextureId = "rbxassetid://120869251"
+mesh.Scale = Vector3.new(0.85, 0.85, 0.85)
+
+local function deadAnim(humanoid)
+humanoid:TakeDamage(math.huge)
+  for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+    if part:IsA("BasePart") then
+  part.Color = Color3.fromRGB(128, 0, 128)
+  part.Anchored = true
+    elseif part:IsA("SpecialMesh") then
+  part.TextureId = ""
+    end
+  end
+local partTweenn2 = game:GetService("TweenService"):Create(humanoid.RootPart, TweenInfo.new(1.4, Enum.EasingStyle.Exponential), {
+        CFrame = humanoid.RootPart.CFrame * CFrame.new(0, 4, 0)
+    })
+    partTweenn2:Play()
+ ball = Instance.new("Part", workspace)
+ ball.Anchored = true
+ ball.CanCollide = false
+ ball.Size = Vector3.zero
+ ball.Color = Color3.fromRGB(128, 0, 128)
+ ball.Material = "ForceField"
+ ball.Shape = "Ball"
+ ball.CFrame = humanoid.RootPart.CFrame
+ game.Debris:AddItem(ball, 5)
+ 
+sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://260433746"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", ball)
+sound.SoundId = "rbxassetid://9126213993"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+local partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {
+        Size = Vector3.new(14, 14, 14)
+    })
+    partTweenn2:Play()
+ wait(0.25)
+local partTweenn2 = game:GetService("TweenService"):Create(ball, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+        Size = Vector3.zero
+    })
+    partTweenn2:Play()
+ for _, part in ipairs(humanoid.Parent:GetDescendants()) do
+  if part:IsA("BasePart") then
+local partTweenn2 = game:GetService("TweenService"):Create(part, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Size = Vector3.zero,
+        CFrame = ball.CFrame
+    })
+    partTweenn2:Play()
+   elseif part:IsA("Accessory") or part:IsA("Shirt") or part:IsA("Pants") or part:IsA("Decal") or part:IsA("Texture") then
+part:Destroy()
+  end
+ end
+end
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+            if currentTime - lastPressTime >= 0.9 then
+                lastPressTime = currentTime 
+ local wearer = tool.Parent
+local gyh = math.random(1, 2)
+ if gyh == 1 then
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://74909537"
+local k = wearer.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+ else
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://74909551"
+local k = wearer.Humanoid:LoadAnimation(Anim)
+k:Play()
+k:AdjustSpeed(2)
+ end
+ 
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://6241709963"
+sound.Volume = 3
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://4958427918"
+sound.Volume = 1
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+par = Instance.new("Part", workspace)
+par.Size = Vector3.zero
+par.CFrame = handle.CFrame * CFrame.new(-10, 0, 0) * CFrame.Angles(0, math.rad(-90), 0)
+par.CanCollide = false
+par.Anchored = true
+game.Debris:AddItem(par, 5)
+
+mesh = Instance.new("SpecialMesh", par)
+mesh.MeshId = "rbxassetid://10090128061"
+mesh.TextureId = "rbxassetid://10090094686"
+mesh.Scale = Vector3.zero
+mesh.VertexColor = Vector3.new(0.5, 0, 0.5)
+
+local foundHumanoids = {}
+local radius = 15
+local origin = wearer.HumanoidRootPart.Position
+local direction = wearer.HumanoidRootPart.CFrame.LookVector
+
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= wearer and v.Health > 0 then
+        local humanoidPosition = v.RootPart.Position
+        local toHumanoid = humanoidPosition - origin
+        local distance = toHumanoid.magnitude
+        local angle = math.acos(toHumanoid.Unit:Dot(direction))
+
+        if distance <= 25 and angle < math.rad(30) then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+ humanoid:TakeDamage(65)
+ humanoid.RootPart.Velocity = par.CFrame.LookVector * 100
+ 
+sound = Instance.new("Sound", humanoid.RootPart)
+sound.SoundId = "rbxassetid://935843979"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+  if humanoid.Health <= 0 then
+deadAnim(humanoid)
+  end
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(mesh, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(13, 13, 13)
+    })
+    partTweenn2:Play()
+local partTweenn2 = game:GetService("TweenService"):Create(par, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        CFrame = par.CFrame * CFrame.new(0, 0, -10)
+    })
+    partTweenn2:Play()
+            end
+end)
+
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = player.Character
+Highlight.Enabled = false
+Highlight.Adornee = player.Character
+Highlight.FillTransparency = 0
+Highlight.FillColor = Color3.fromRGB(128, 0, 128)
+Highlight.OutlineColor = Color3.fromRGB(128, 0, 128)
+Highlight.OutlineTransparency = 1
+Highlight.DepthMode = "Occluded"
+
+local ScreenGui = Instance.new("ScreenGui", player.PlayerGui)
+ScreenGui.Enabled = false
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+Button.Position = UDim2.new(0.76, 0, 0.6, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Soul Switcher"
+Button.Parent = ScreenGui
+
+local lastPressTime = 0
+Button.MouseButton1Click:Connect(function()
+local currentTime = tick()
+    if currentTime - lastPressTime >= 5 then
+          lastPressTime = currentTime 
+local nearestHumanoid = nil
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.Parent ~= player.Character and v.Health > 0 then
+        local distance = (player.Character.HumanoidRootPart.Position - v.RootPart.Position).Magnitude
+        if distance < 120 then
+            nearestHumanoid = v
+        end
+    end
+end
+
+if nearestHumanoid then
+  local sf = nearestHumanoid.RootPart.CFrame
+  local dr = player.Character.HumanoidRootPart.CFrame
+  player.Character.HumanoidRootPart.CFrame = sf
+  nearestHumanoid.RootPart.CFrame = dr
+  nearestHumanoid:TakeDamage(105)
+  
+  sound = Instance.new("Sound", nearestHumanoid.RootPart)
+sound.SoundId = "rbxassetid://236382703"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+sound = Instance.new("Sound", nearestHumanoid.RootPart)
+sound.SoundId = "rbxassetid://4965926555"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+
+asde = Instance.new("Part", workspace)
+asde.CFrame = dr
+asde.Anchored = true
+asde.CanCollide = false
+asde.Material = "Neon"
+asde.Color = Color3.new(100, 0, 100)
+asde.Size = Vector3.zero
+game.Debris:AddItem(asde, 3)
+
+mesh = Instance.new("SpecialMesh", asde)
+mesh.MeshId = "rbxassetid://5747850601"
+mesh.Scale = Vector3.zero
+
+local foundHumanoids = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Humanoid") and v.RootPart and v.RootPart.Parent ~= nearestHumanoid.Parent and v.Parent ~= player.Character then
+        local distance = (v.RootPart.Position - nearestHumanoid.RootPart.Position).magnitude
+        if distance <= 25 then
+            table.insert(foundHumanoids, v)
+        end
+    end
+end
+
+for _, humanoid in pairs(foundHumanoids) do
+  humanoid:TakeDamage(20)
+  humanoid.Sit = true
+  humanoid.RootPart.Velocity += (nearestHumanoid.RootPart.Position - humanoid.RootPart.Position).Unit * 75
+end
+
+local partTweenn2 = game:GetService("TweenService"):Create(mesh, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Scale = Vector3.new(10, 10, 10)
+    })
+    partTweenn2:Play()
+local partTweenn2 = game:GetService("TweenService"):Create(asde, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+        Transparency = 1,
+        Color = Color3.new(0, 0, 0)
+    })
+    partTweenn2:Play()
+    
+   fire = Instance.new("Fire", nearestHumanoid.RootPart)
+   fire.Size = 20
+   fire.Color = Color3.new(0.5, 0, 0.5)
+   fire.SecondaryColor = Color3.new(0, 0, 0)
+   fire.Heat = 0
+   game.Debris:AddItem(fire, 10)
+  spawn(function()
+     for i = 1, 100 do
+  nearestHumanoid:TakeDamage(0.1)
+   wait(0.1)
+     end
+  end)
+end
+    end
+end)
+
+tool.Equipped:Connect(function()
+Highlight.Enabled = true
+ScreenGui.Enabled = true
+local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(0.7, Enum.EasingStyle.Linear), {
+        FillTransparency = 0.8
+    })
+    partTweenn2:Play()
+
+sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://9126214611"
+sound.Volume = 1.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+end)
+
+tool.Unequipped:Connect(function()
+Highlight.Enabled = false
+Highlight.FillTransparency = 0
+ScreenGui.Enabled = false
+end)
