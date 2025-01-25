@@ -1,0 +1,60 @@
+local tool = cloneref(Instance.new("Tool", game.Players.LocalPlayer.Backpack))
+tool.Name = "Wall mounted camera"
+tool.Grip = CFrame.Angles(0, math.rad(180), 0)
+
+local handle = cloneref(Instance.new("Part", tool))
+handle.Name = "Handle"
+
+local mesh = cloneref(Instance.new("SpecialMesh", handle))
+mesh.MeshId = "rbxassetid://7907598754"
+mesh.TextureId = "rbxassetid://7907598886"
+mesh.Scale = Vector3.new(0.05, 0.05, 0.05)
+
+tool.Activated:Connect(function()
+ local mouseh = game.Players.LocalPlayer:GetMouse().Hit.Position
+  if (handle.Position - mouseh).Magnitude > 7 then return end
+  
+  local came = handle:Clone()
+  came.Parent = workspace
+  came.CanTouch = false
+  came.CanCollide = true
+  came.Position = mouseh
+  came.Anchored = true
+  came.CFrame = CFrame.new(came.Position, handle.Position)
+  
+local sound = cloneref(Instance.new("Sound", came))
+sound.SoundId = "rbxassetid://9126065502"
+sound.Volume = 2.5
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ tool:Destroy()
+ 
+ local tablet = cloneref(Instance.new("Tool", game.Players.LocalPlayer.Backpack))
+ tablet.Name = "Tablet"
+ 
+ local handle = cloneref(Instance.new("Part", tablet))
+ handle.Name = "Handle"
+ 
+ local mesh = cloneref(Instance.new("SpecialMesh", handle))
+ mesh.MeshId = "rbxassetid://1477397412"
+ mesh.TextureId = "rbxassetid://1477397461"
+ mesh.Scale = Vector3.new(1, 1, 1)
+ 
+ tablet.Equipped:Connect(function()
+workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+workspace.CurrentCamera.CFrame = came.CFrame
+
+local sound = cloneref(Instance.new("Sound", came))
+sound.SoundId = "rbxassetid://8930408685"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ end)
+ 
+ tablet.Unequipped:Connect(function()
+workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+ end)
+end)
