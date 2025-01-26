@@ -1,0 +1,50 @@
+local tool = cloneref(Instance.new("Tool", game.Players.LocalPlayer.Backpack))
+tool.Name = "LED stick"
+tool.ToolTip = "Light up the area"
+tool.Grip = CFrame.Angles(math.rad(90), 0, 0)
+tool.GripPos = Vector3.new(0, 0, -0.3)
+
+local handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Material = "Neon"
+handle.Transparency = 0.1
+handle.Size = Vector3.new(1, 2.3, 1)
+
+local mesh = Instance.new("SpecialMesh", handle)
+ mesh.MeshId = "rbxassetid://10488413763"
+ mesh.Scale = Vector3.new(0.5, 0.5, 0.5)
+
+tool.Activated:Connect(function()
+ local stick = handle:Clone()
+ stick.Parent = workspace
+ stick.CanCollide = true
+ stick.Velocity = game.Players.LocalPlayer:GetMouse().Hit.LookVector * 200
+ stick.CanTouch = false
+ 
+ game.Debris:AddItem(stick, 180)
+ tool:Destroy()
+
+local Smoke = Instance.new("Smoke", stick)
+Smoke.Opacity = 0.1
+Smoke.TimeScale = 0.5
+Smoke.Size = 4
+Smoke.RiseVelocity = 2
+Smoke.Color = stick.Color
+ 
+local sound = Instance.new("Sound", game.Players.LocalPlayer.Character.HumanoidRootPart)
+sound.SoundId = "rbxassetid://608600954"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(sound, 2)
+ 
+ local light = Instance.new("PointLight", stick)
+ light.Range = 100
+ light.Brightness = 2
+ light.Color = stick.Color
+end)
+
+tool.Equipped:Connect(function()
+ handle.Color = Color3.new(math.random(0, 1), math.random(0, 1), math.random(0, 1))
+end)
