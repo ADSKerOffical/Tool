@@ -10,6 +10,28 @@ mesh.MeshId = "rbxassetid://7907598754"
 mesh.TextureId = "rbxassetid://7907598886"
 mesh.Scale = Vector3.new(0.05, 0.05, 0.05)
 
+local Screen = Instance.new("ScreenGui", gethui())
+Screen.ResetOnSpawn = true
+Screen.Enabled = false
+Screen.ClipToDeviceSafeArea = false
+Screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Screen.DisplayOrder = -25
+
+spawn(function()
+repeat task.wait(0.25)
+  if game.Players.LocalPlayer.Character.Humanoid:GetState() == "Dead" then
+Screen:Destroy()
+  end
+until game.Players.LocalPlayer.Character.Humanoid:GetState() == "Dead"
+end)
+
+local frame = Instance.new("Frame", Screen)
+frame.Position = UDim2.new(-1.5, 0, -0.5, 0)
+frame.Size = UDim2.new(100, 0, 10, 0)
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0.4
+
 tool.Activated:Connect(function()
  local mouseh = game.Players.LocalPlayer:GetMouse().Hit.Position
   if (handle.Position - mouseh).Magnitude > 7 then return end
@@ -20,7 +42,34 @@ tool.Activated:Connect(function()
   came.CanCollide = true
   came.Position = mouseh
   came.Anchored = true
-  came.CFrame = CFrame.new(came.Position, handle.Position)
+  came.CFrame = CFrame.new(came.Position, tool.Parent.Head.Position)
+  game.Debris:AddItem(came, 600)
+  local mouset = game.Players.LocalPlayer:GetMouse().Target
+  
+spawn(function()
+ local isstop = false
+ local savedParent = mouset.Parent
+  repeat task.wait(0.2)
+    if mouset.Parent == nil or mouset.CanCollide == false or mouset.Parent:FindFirstChildOfClass("Humanoid") or mouset.Anchored == false or mouset.Parent ~= savedParent or mouset.Transparency >= 0.8 then
+came.Anchored = false
+isstop = true
+local sound = Instance.new("Sound", came)
+sound.SoundId = "rbxassetid://8060079174"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(sound, 4)
+
+local smoke = Instance.new("Smoke", came)
+smoke.Opacity = 0.1
+smoke.Color = Color3.new(0, 0, 0)
+  task.wait(30)
+isbroken = true
+frame.Visible = true
+    end
+  until not came or not mouset or isstop == true or mouset.CanCollide == false or mouset.Parent:IsA("Model") or mouset.Anchored == false or mouset.Parent ~= savedParent or mouset.Transparency >= 0.8
+end)
   
 local sound = cloneref(Instance.new("Sound", came))
 sound.SoundId = "rbxassetid://9126065502"
@@ -28,6 +77,7 @@ sound.Volume = 2.5
 sound.PlaybackSpeed = 1
 sound.Looped = false
 sound:Play()
+game.Debris:AddItem(sound, 4)
  tool:Destroy()
  
  local tablet = cloneref(Instance.new("Tool", game.Players.LocalPlayer.Backpack))
@@ -43,7 +93,18 @@ sound:Play()
  
  tablet.Equipped:Connect(function()
 workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+Screen.Enabled = true
+  spawn(function()
 workspace.CurrentCamera.CFrame = came.CFrame
+   repeat task.wait()
+ if came.Anchored == false then
+workspace.CurrentCamera.CFrame = came.CFrame
+   if tablet.Parent ~= game.Players.LocalPlayer.Character then
+workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+   end
+end
+   until not tablet or not came or tablet.Parent ~= game.Players.LocalPlayer.Character
+  end)
 
 local sound = cloneref(Instance.new("Sound", came))
 sound.SoundId = "rbxassetid://8930408685"
@@ -51,9 +112,11 @@ sound.Volume = 2
 sound.PlaybackSpeed = 1
 sound.Looped = false
 sound:Play()
+game.Debris:AddItem(sound, 2)
  end)
  
  tablet.Unequipped:Connect(function()
+Screen.Enabled = false
 workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
  end)
