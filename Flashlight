@@ -1,0 +1,30 @@
+local tool = cloneref(Instance.new("Tool", game.Players.LocalPlayer.Backpack))
+tool.Name = "Flashlight"
+tool.GripPos = Vector3.new(0.1, -0.4, 0)
+
+local handle = cloneref(Instance.new("Part", tool))
+handle.Name = "Handle"
+
+local mesh = cloneref(Instance.new("SpecialMesh", handle))
+mesh.MeshId = "rbxassetid://115955313"
+mesh.TextureId = "rbxassetid://115955343"
+mesh.Scale = Vector3.new(0.7, 0.7, 0.7)
+
+local light = cloneref(Instance.new("SurfaceLight", handle))
+light.Range = 50
+light.Brightness = 3
+light.Color = Color3.new(1, 1, 1)
+light.Enabled = false
+
+local togle = cloneref(Instance.new("Sound", handle))
+togle.Volume = 1
+togle.PlaybackSpeed = 1
+togle.SoundId = "rbxassetid://115959318"
+
+local isenab = false
+
+tool.Activated:Connect(function()
+togle:Play()
+isenab = not isenab
+  light.Enabled = isenab
+end)
