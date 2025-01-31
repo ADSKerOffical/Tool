@@ -1,0 +1,134 @@
+local tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Tool gun"
+tool.ToolTip = "Universal weapon for exploit makers"
+tool.GripPos = Vector3.new(0, -0.45, 0.75)
+
+local handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://4658783228"
+mesh.TextureId = "rbxassetid://4658783257"
+mesh.Scale = Vector3.new(0.15, 0.175, 0.2)
+
+local toolmode = 1
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Enabled = false
+ScreenGui.ResetOnSpawn = true
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
+Button.Position = UDim2.new(0.86, 0, 0.4, 0)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.Text = "Switch mode"
+Button.Parent = ScreenGui
+
+Button.MouseButton1Click:Connect(function()
+    toolmode += 1
+     if toolmode >= 4 then
+toolmode = 1
+     end
+end)
+
+local function mode1()
+local mouset = game.Players.LocalPlayer:GetMouse().Target
+  if mouset then
+setclipboard(tostring(mouset:GetFullName()))
+
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = mouset
+Highlight.Adornee = mouset
+Highlight.FillTransparency = 0
+Highlight.FillColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineTransparency = 0
+game.Debris:AddItem(Highlight, 4)
+
+local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(1, Enum.EasingStyle.Sine), {
+        FillTransparency = 1,
+        OutlineTransparency = 1
+    })
+    partTweenn2:Play()
+  end
+end
+
+local function mode2()
+local mouset = game.Players.LocalPlayer:GetMouse().Target
+  if mouset then
+print("ClassName: ", mouset.ClassName, "\nAnchored: ", mouset.Anchored, "\nColor: ", mouset.Color, "\nCanCollide: ", mouset.CanCollide, "\nSize: ", mouset.Size, "\nName: ", mouset.Name, "\nMaterial: ", mouset.Material, "\nTransparency: ", mouset.Transparency)
+
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = mouset
+Highlight.Adornee = mouset
+Highlight.FillTransparency = 0
+Highlight.FillColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineTransparency = 0
+game.Debris:AddItem(Highlight, 4)
+
+local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(1, Enum.EasingStyle.Sine), {
+        FillTransparency = 1,
+        OutlineTransparency = 1
+    })
+    partTweenn2:Play()
+  end
+end
+
+local function mode3()
+local mouset = game.Players.LocalPlayer:GetMouse().Target
+  if mouset then
+for _, obj in ipairs(mouset:GetDescendants()) do
+  print(obj:GetFullName())
+end
+
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = mouset
+Highlight.Adornee = mouset
+Highlight.FillTransparency = 0
+Highlight.FillColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineTransparency = 0
+game.Debris:AddItem(Highlight, 4)
+
+local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(1, Enum.EasingStyle.Sine), {
+        FillTransparency = 1,
+        OutlineTransparency = 1
+    })
+    partTweenn2:Play()
+  end
+end
+
+tool.Activated:Connect(function()
+  local owner = game.Players:FindFirstChild(tool.Parent.Name)
+local sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://7496207231"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(sound, 4)
+   if toolmode == 1 then
+mode1()
+   elseif toolmode == 2 then
+mode2()
+   elseif toolmode == 3 then
+mode3()
+   elseif toolmode == 4 then
+mode4()
+   end
+end)
+
+tool.Equipped:Connect(function()
+  local owner = game.Players:FindFirstChild(tool.Parent.Name)
+  ScreenGui.Parent = owner.PlayerGui
+  ScreenGui.Enabled = true
+end)
+
+tool.Unequipped:Connect(function()
+  local owner = game.Players:FindFirstChild(tool.Parent.Name)
+  ScreenGui.Enabled = false
+end)
