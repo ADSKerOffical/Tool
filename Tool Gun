@@ -33,11 +33,11 @@ Button.MouseButton1Click:Connect(function()
 toolmode = 1
      end
  if toolmode == 1 then
-Button.Color = Color3.new(0.35, 0, 0)
+Button.BackgroundColor3 = Color3.new(0.35, 0, 0)
   elseif toolmode == 2 then
-Button.Color = Color3.new(0, 0.35, 0)
+Button.BackgroundColor3 = Color3.new(0, 0.35, 0)
   elseif toolmode == 3 then
-Button.Color = Color3.new(0, 0, 0.35)
+Button.BackgroundColor3 = Color3.new(0, 0, 0.35)
  end
 local sound = Instance.new("Sound", handle)
 sound.SoundId = "rbxassetid://18755588842"
