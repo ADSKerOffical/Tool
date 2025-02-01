@@ -1,0 +1,42 @@
+local tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+tool.Name = "Multi coil"
+tool.GripPos = Vector3.new(0, 0, -0.3)
+
+local handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+handle.Color = Color3.new(1, 0, 1)
+handle.Material = "Neon"
+
+local mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://16606212"
+mesh.Scale = Vector3.new(0.7, 0.7, 0.7)
+
+local tofyy = false
+tool.Activated:Connect(function()
+local sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://99173388"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+game.Debris:AddItem(sound, 4)
+
+ tofyy = not tofyy
+  if tofyy then
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+   else
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100
+  end
+end)
+
+tool.Equipped:Connect(function()
+ game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+ game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+end)
+
+tool.Unequipped:Connect(function()
+  game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+  game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+end)
