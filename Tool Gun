@@ -32,6 +32,20 @@ Button.MouseButton1Click:Connect(function()
      if toolmode >= 4 then
 toolmode = 1
      end
+ if toolmode == 1 then
+Button.Color = Color3.new(0.35, 0, 0)
+  elseif toolmode == 2 then
+Button.Color = Color3.new(0, 0.35, 0)
+  elseif toolmode == 3 then
+Button.Color = Color3.new(0, 0, 0.35)
+ end
+local sound = Instance.new("Sound", handle)
+sound.SoundId = "rbxassetid://18755588842"
+sound.Volume = 2
+sound.PlaybackSpeed = 1
+sound.Looped = false
+sound:Play()
+ game.Debris:AddItem(sound, 3)
 end)
 
 local function mode1()
