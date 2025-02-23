@@ -21,11 +21,21 @@ local Button = Instance.new("TextButton")
 Button.Name = "Button"
 Button.Size = UDim2.new(0.07, 0.07, 0.07, 7)
 Button.Position = UDim2.new(0.86, 0, 0.4, 0)
-Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.BackgroundColor3 = Color3.new(0.35, 0, 0)
 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 Button.TextScaled = true
 Button.Text = "Switch mode"
 Button.Parent = ScreenGui
+
+local getproperties = newcclosure(function(instance)
+local properties = {}
+    for _, propertyName in ipairs(game:GetService("ReflectionService"):GetPropertyNames(instance.ClassName)) do
+        if instance[propertyName] ~= nil then
+            properties[propertyName] = instance[propertyName]
+        end
+    end
+  return properties
+end)
 
 Button.MouseButton1Click:Connect(function()
     toolmode += 1
@@ -73,8 +83,11 @@ end
 local function mode2()
 local mouset = game.Players.LocalPlayer:GetMouse().Target
   if mouset then
-print("ClassName: ", mouset.ClassName, "\nAnchored: ", mouset.Anchored, "\nColor: ", mouset.Color, "\nCanCollide: ", mouset.CanCollide, "\nSize: ", mouset.Size, "\nName: ", mouset.Name, "\nMaterial: ", mouset.Material, "\nTransparency: ", mouset.Transparency)
-
+  
+  for i, v in next, getproperties(mouset) do
+    print(i, v)
+  end
+  
 local Highlight = Instance.new("Highlight")
 Highlight.Parent = mouset
 Highlight.Adornee = mouset
