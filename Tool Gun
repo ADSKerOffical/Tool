@@ -50,7 +50,7 @@ end)
 
 Button.MouseButton1Click:Connect(function()
     toolmode += 1
-     if toolmode > 6 then
+     if toolmode > 7 then
 toolmode = 1
      end
  if toolmode == 1 then
@@ -65,6 +65,8 @@ Button.BackgroundColor3 = Color3.new(0.35, 0.35, 0)
 Button.BackgroundColor3 = Color3.new(0.35, 0, 0.35)
   elseif toolmode == 6 then
 Button.BackgroundColor3 = Color3.new(0.5, 0.25, 0.1)
+  elseif toolmode == 7 then
+Button.BackgroundColor3 = Color3.new(0.1, 0.25, 0.5)
  end
 local sound = Instance.new("Sound", handle)
 sound.SoundId = "rbxassetid://18755588842"
@@ -151,7 +153,13 @@ local function mode4()
   if mouset then
    for _, dec in next, mouset:GetDescendants() do
      if dec:IsA("Decal") or dec:IsA("Texture") then
-print(dec.Texture)
+print(dec.ClassName, dec.Texture)
+     elseif dec:IsA("SurfaceGui") or dec:IsA("BillboardGui") and dec:FindFirstChildOfClass("ImageLabel") then
+  for _, bil in next, dec:GetDescendants() do
+    if bil:IsA("ImageLabel") then
+print(bil.ClassName, bil.Image)
+    end
+  end
      end
    end
    
@@ -230,6 +238,33 @@ local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.
   end
 end
 
+local function mode7()
+ local mouset = game.Players.LocalPlayer:GetMouse().Target
+  if mouset then
+    for _, soun in next, mouset:GetDescendants() do
+       if soun:IsA("Sound") then
+print(soun.ClassName, soun.SoundId)
+       elseif soun:IsA("SoundEffect") then
+print(soun.ClassName, soun:GetFullName())
+       end
+    end
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = mouset
+Highlight.Adornee = mouset
+Highlight.FillTransparency = 0
+Highlight.FillColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineTransparency = 0
+game.Debris:AddItem(Highlight, 4)
+
+local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(1, Enum.EasingStyle.Sine), {
+        FillTransparency = 1,
+        OutlineTransparency = 1
+    })
+    partTweenn2:Play()
+  end
+end
+
 tool.Activated:Connect(function()
   local owner = game.Players:FindFirstChild(tool.Parent.Name)
 local sound = Instance.new("Sound", handle)
@@ -251,6 +286,8 @@ mode4()
 mode5()
    elseif toolmode == 6 then
 mode6()
+   elseif toolmode == 7 then
+mode7()
    end
 end)
 
