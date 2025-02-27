@@ -38,6 +38,68 @@ consob.MouseButton1Click:Connect(function()
   game:GetService("StarterGui"):SetCore("DevConsoleVisible", true)
 end)
 
+local extra = Instance.new("TextButton", ScreenGui)
+extra.Text = "Print all"
+extra.Position = UDim2.new(0.83, 0, 0.52, 0)
+extra.Size = UDim2.new(0.04, 0.04, 0.04, 4)
+extra.TextColor3 = Color3.new(1, 1, 1)
+extra.TextScaled = true
+extra.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+
+extra.MouseButton1Click:Connect(function()
+  if toolmode == 1 then
+for _, part in next, workspace:GetDescendants() do
+  if part:IsA("BasePart") then
+print(part.ClassName, part:GetFullName())
+  end
+end
+  elseif toolmode == 2 then
+
+  elseif toolmode == 3 then
+
+  elseif toolmode == 4 then
+for _, img in next, workspace:GetDescendants() do
+  if img:IsA("Decal") or img:IsA("Texture") or img:IsA("ParticleEmitter") or img:IsA("Beam") then
+print(img.ClassName, img.Texture)
+  elseif img:IsA("ImageLabel") then
+print(img.ClassName, img.Image)
+  end
+end
+  elseif toolmode == 5 then
+for _, mes in next, workspace:GetDescendants() do
+  if mes:IsA("SpecialMesh") then
+print(mes.ClassName, mes.TextureId)
+ elseif mes:IsA("MeshPart") then
+print(mes.ClassName, mes.TextureID)
+  end
+end
+  elseif toolmode == 6 then
+for _, part in next, workspace:GetDescendants() do
+  if part:IsA("BasePart") and part:FindFirstChild("TouchInterest") then
+print(part.ClassName, part:GetFullName())
+  end
+end
+  elseif toolmode == 7 then
+for _, sound in next, workspace:GetDescendants() do
+  if sound:IsA("Sound") then
+print(sound.ClassName, sound.SoundId, sound.Parent:GetFullName())
+  end
+end
+  elseif toolmode == 8 then
+for _, anim in next, workspace:GetDescendants() do
+  if anim:IsA("Animation") then
+print(anim.ClassName, anim.AnimationId, anim.Parent:GetFullName())
+  end
+end
+  end
+  
+  extra.BackgroundColor3 = Color3.new(0, 1, 0)
+  local partTweenn2 = game:GetService("TweenService"):Create(extra, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    })
+    partTweenn2:Play()
+end)
+
 local getproperties = newcclosure(function(instance)
 local properties = {}
     for _, propertyName in ipairs(game:GetService("ReflectionService"):GetPropertyNames(instance.ClassName)) do
@@ -50,7 +112,7 @@ end)
 
 Button.MouseButton1Click:Connect(function()
     toolmode += 1
-     if toolmode > 7 then
+     if toolmode > 8 then
 toolmode = 1
      end
  if toolmode == 1 then
@@ -67,6 +129,8 @@ Button.BackgroundColor3 = Color3.new(0.35, 0, 0.35)
 Button.BackgroundColor3 = Color3.new(0.5, 0.25, 0.1)
   elseif toolmode == 7 then
 Button.BackgroundColor3 = Color3.new(0.1, 0.25, 0.5)
+  elseif toolmode == 8 then
+Button.BackgroundColor3 = Color3.new(0.5, 0.25, 0.5)
  end
 local sound = Instance.new("Sound", handle)
 sound.SoundId = "rbxassetid://18755588842"
@@ -152,7 +216,7 @@ local function mode4()
  local mouset = game.Players.LocalPlayer:GetMouse().Target
   if mouset then
    for _, dec in next, mouset:GetDescendants() do
-     if dec:IsA("Decal") or dec:IsA("Texture") then
+     if dec:IsA("Decal") or dec:IsA("Texture") or dec:IsA("ParticleEmitter") or dec:IsA("Beam") or dec:IsA("Trail") then
 print(dec.ClassName, dec.Texture)
      elseif dec:IsA("SurfaceGui") or dec:IsA("BillboardGui") and dec:FindFirstChildOfClass("ImageLabel") then
   for _, bil in next, dec:GetDescendants() do
@@ -265,6 +329,32 @@ local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.
   end
 end
 
+local function mode8()
+ local mouset = game.Players.LocalPlayer:GetMouse().Target
+  if mouset and mouset.Parent:FindFirstChildOfClass("Humanoid") then
+  
+  for _, animation in ipairs(mouset.Parent:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks()) do
+    print(mouset.Parent:FindFirstChildOfClass("Humanoid").RigType, animation.Animation.ClassName, animation.Animation.AnimationId)
+  end
+  
+local Highlight = Instance.new("Highlight")
+Highlight.Parent = mouset
+Highlight.Adornee = mouset
+Highlight.FillTransparency = 0
+Highlight.FillColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineColor = Color3.fromRGB(0, 255, 0)
+Highlight.OutlineTransparency = 0
+game.Debris:AddItem(Highlight, 4)
+
+local partTweenn2 = game:GetService("TweenService"):Create(Highlight, TweenInfo.new(1, Enum.EasingStyle.Sine), {
+        FillTransparency = 1,
+        OutlineTransparency = 1
+    })
+    partTweenn2:Play()
+    partTweenn2.Completed:Wait()
+  end
+end
+
 tool.Activated:Connect(function()
   local owner = game.Players:FindFirstChild(tool.Parent.Name)
 local sound = Instance.new("Sound", handle)
@@ -288,6 +378,8 @@ mode5()
 mode6()
    elseif toolmode == 7 then
 mode7()
+   elseif toolmode == 8 then
+mode8()
    end
 end)
 
