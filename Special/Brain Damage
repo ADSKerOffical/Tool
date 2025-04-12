@@ -1,0 +1,79 @@
+player = game.Players.LocalPlayer
+local tool = Instance.new("Tool", player.Backpack)
+tool.Name = "Brain Damage"
+tool.Grip = CFrame.Angles(math.rad(90), math.rad(190), math.rad(90))
+tool.CanBeDropped = false
+
+local handle = Instance.new("Part", tool)
+handle.Name = "Handle"
+
+local mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshId = "rbxassetid://442403831"
+mesh.TextureId = "rbxassetid://442403833"
+mesh.Scale = Vector3.new(0.15, 0.15, 0.15)
+
+local lastPressTime = 0
+tool.Activated:Connect(function()
+  local currentTime = tick()
+      if currentTime - lastPressTime >= 2 then
+         lastPressTime = currentTime
+ local anim = Instance.new("Animation", player.Character)
+ anim.AnimationId = "rbxassetid://209875013"
+ local de = player.Character.Humanoid:LoadAnimation(anim)
+ de.Looped = false
+ de:AdjustSpeed(1.5)
+ de:Play()
+ game.Debris:AddItem(anim, task.wait())
+ game.Debris:AddItem(de, task.wait())
+ 
+ local sound = Instance.new("Sound", handle)
+ sound.SoundId = "rbxassetid://191395631"
+ sound.Volume = 1
+ sound.PlaybackSpeed = 1
+ sound:Play()
+ game.Debris:AddItem(sound, 5)
+   task.wait(0.1)
+ local function gethumanoids(radius)
+  local all = {}
+  for _, part in next, workspace:GetPartBoundsInRadius(handle.Position, radius) do
+    if not part:IsDescendantOf(player.Character) and part.Parent:FindFirstChildOfClass("Humanoid") then
+      local humanoid = part.Parent:FindFirstChildOfClass("Humanoid")
+       if not table.find(all, humanoid) then
+        table.insert(all, humanoid)
+       end
+     end
+   end
+   return all
+ end
+ 
+ for _, humanoid in next, gethumanoids(8) do
+   humanoid:TakeDamage(34)
+   humanoid.Parent:FindFirstChild("HumanoidRootPart").Velocity += (handle.Position - humanoid.RootPart.Position).Unit * -100
+   local random = math.random(1, 6)
+    if random == 6 then
+      humanoid:TakeDamage(34)
+      humanoid.Parent:FindFirstChild("HumanoidRootPart").AssemblyAngularVelocity += Vector3.new(100, 100, 100)
+      humanoid:ChangeState("FallingDown")
+      
+      local sound = Instance.new("Sound", humanoid.Parent:FindFirstChild("HumanoidRootPart"))
+      sound.SoundId = "rbxassetid://81369013904337"
+      sound.Volume = 1.5
+      sound.PlaybackSpeed = 1
+      sound.Pitch = (math.random(9, 10) / 10)
+      sound:Play()
+      game.Debris:AddItem(sound, 10)
+    end
+ end
+      end
+end)
+
+tool.Equipped:Connect(function()
+local anim = Instance.new("Animation", player.Character)
+anim.AnimationId = "rbxassetid://317460113"
+anim.Name = "HoldAnimation"
+local he = player.Character.Humanoid:LoadAnimation(anim)
+he:Play()
+ tool.Unequipped:Wait()
+ he:Stop()
+ anim:Destroy()
+end)
