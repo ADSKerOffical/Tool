@@ -168,7 +168,7 @@ local mouset = game.Players.LocalPlayer:GetMouse().Target
   if mouset then
   
   for i, v in next, getproperties(mouset) do
-    print(i, v)
+   pcall(function() print(i, v) end)
   end
   
 local Highlight = Instance.new("Highlight")
