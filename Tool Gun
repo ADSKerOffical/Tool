@@ -103,9 +103,11 @@ end)
 local getproperties = newcclosure(function(instance)
 local properties = {}
     for _, propertyName in ipairs(game:GetService("ReflectionService"):GetPropertyNames(instance.ClassName)) do
+      pcall(function()
         if instance[propertyName] ~= nil then
             properties[propertyName] = instance[propertyName]
         end
+      end)
     end
   return properties
 end)
